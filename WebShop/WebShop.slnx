@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/1.Domain/">
+    <Project Path="Webshop.Domain/Webshop.Domain.csproj" Id="c243de54-93c3-43c9-bf74-095b4e47f075" />
+  </Folder>
+  <Folder Name="/2.Application/">
+    <Project Path="Webshop.Application/Webshop.Application.csproj" Id="1850efd9-f728-4333-81a0-0de3b47be73f" />
+  </Folder>
+  <Folder Name="/3.Infrastructure/">
+    <Project Path="Webshop.Infrastructure/Webshop.Infrastructure.csproj" Id="cc5ce94d-37ca-4278-8208-c21e8a6d735d" />
+  </Folder>
+  <Folder Name="/4.Presentation/">
+    <Project Path="WebShop/WebShop.Presentation.csproj" />
+  </Folder>
+</Solution>

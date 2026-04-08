@@ -12,6 +12,7 @@ public class Produkt
     public Guid LeverantörId { get; set; }
     public Leverantör? Leverantör { get; set; }
     public Guid KategoriId { get; set; }
+    public bool ÄrUtvald { get; set; }
     public Kategori? Kategori { get; set; }
     public List<ProduktOrder>? ProduktOrdrar { get; set; }
 

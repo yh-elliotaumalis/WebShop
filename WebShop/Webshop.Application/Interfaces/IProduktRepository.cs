@@ -8,6 +8,8 @@ public interface IProduktRepository
     Task<Produkt?> GetByIdAsync(Guid id);
     Task<IEnumerable<Produkt>> GetByCategoryAsync(Guid categoryId);
     Task<IEnumerable<Produkt>> GetBySearchAsync(string search);
+    Task<IEnumerable<Produkt>> GetFeaturedAsync();
+    Task<IEnumerable<Produkt>> GetBestSellersAsync(int antal);
     Task AddAsync(Produkt produkt);
     Task UpdateAsync(Produkt produkt);
     Task DeleteAsync(Guid id);

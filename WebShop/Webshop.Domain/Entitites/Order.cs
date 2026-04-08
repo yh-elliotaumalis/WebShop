@@ -1,4 +1,6 @@
-﻿namespace Webshop.Domain.Entitites;
+﻿using Webshop.Domain.Enums;
+
+namespace Webshop.Domain.Entitites;
 
 public class Order
 {
@@ -7,6 +9,8 @@ public class Order
     public decimal TotalPris { get; set; }
     public Guid KundId { get; set; }
     public Kund? Kund { get; set; }
+    public Betalsätt Betalsätt { get; set; }
+    public bool ÄrBetald { get; set; }
     public Guid FraktOmbudId { get; set; }
     public FraktOmbud? FraktOmbud { get; set; }
     public List<ProduktOrder> ProduktOrdrar { get; set; } = new List<ProduktOrder>();

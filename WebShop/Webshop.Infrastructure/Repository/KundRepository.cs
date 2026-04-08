@@ -11,11 +11,13 @@ public class KundRepository(WebshopDbContext db) : IKundRepository
         => await db.Kunder.ToListAsync();
 
     public async Task<Kund?> GetByIdAsync(Guid id)
-        => await db.Kunder
-            .Include(k => k.Ordrar)
-                .ThenInclude(o => o.ProduktOrdrar)
-                    .ThenInclude(po => po.Produkt)
-            .FirstOrDefaultAsync(k => k.Id == id);
+     => await db.Kunder
+         .Include(k => k.Ordrar)
+             .ThenInclude(o => o.FraktOmbud)
+         .Include(k => k.Ordrar)
+             .ThenInclude(o => o.ProduktOrdrar)
+                 .ThenInclude(po => po.Produkt)
+         .FirstOrDefaultAsync(k => k.Id == id);
 
     public async Task<IEnumerable<Kund>> GetBySearchAsync(string search)
         => await db.Kunder

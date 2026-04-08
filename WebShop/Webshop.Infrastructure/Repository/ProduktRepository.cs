@@ -24,6 +24,17 @@ public class ProduktRepository(WebshopDbContext db) : IProduktRepository
         => await GetProdukterWithIncludes()
             .Where(p => p.KategoriId == categoryId)
             .ToListAsync();
+    public async Task<IEnumerable<Produkt>> GetFeaturedAsync()
+    => await GetProdukterWithIncludes()
+        .Where(p => p.ÄrUtvald)
+        .ToListAsync();
+
+    public async Task<IEnumerable<Produkt>> GetBestSellersAsync(int antal)
+        => await GetProdukterWithIncludes()
+            .OrderByDescending(p => p.ProduktOrdrar.Sum(po => po.Antal))
+            .Take(antal)
+            .ToListAsync();
+
 
     public async Task<IEnumerable<Produkt>> GetBySearchAsync(string search)
         => await GetProdukterWithIncludes()

@@ -7,6 +7,7 @@ public class WebshopDbContext(DbContextOptions<WebshopDbContext> options) : DbCo
 {
     public DbSet<Produkt> Produkter { get; set; }
     public DbSet<Kund> Kunder { get; set; }
+    public DbSet<FraktOmbud> FraktOmbud { get; set; }
     public DbSet<Leverantör> Leverantörer { get; set; }
     public DbSet<Kategori> Kategorier { get; set; }
     public DbSet<Order> Ordrar { get; set; }

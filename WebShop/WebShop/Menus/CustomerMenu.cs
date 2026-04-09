@@ -1,9 +1,14 @@
-﻿namespace HustlersAB.Admin.Menus;
+﻿using Webshop.Application.Interfaces;
+
+namespace HustlersAB.Admin.Menus;
 
 public class CustomerMenu : MenuBase
 {
-    public CustomerMenu()
+    private readonly IProduktService _productService;
+    public CustomerMenu(IProduktService productService)
     {
+        _productService = productService;
+
         _options = new[] { "Handla produkter", "Varukorgen", "Tillbaka" };
     }
 

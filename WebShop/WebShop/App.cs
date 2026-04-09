@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HustlersAB.Admin.Menus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Webshop.Application.Services;
 using Webshop.Infrastructure.EF;
 using Webshop.Infrastructure.EF.Seeds;
+using Webshop.Infrastructure.Repositories;
 
 namespace WebShop.Presentation;
 
@@ -21,6 +24,11 @@ public class App
 
         using var db = servicesProvider.GetRequiredService<WebshopDbContext>();
         WebShopSeeder.Seed(db);
+
+        var repo = new ProduktRepository(db);
+        var service = new ProduktService(repo);
+        var menu = new MainMenu(service);
+        menu.ShowMenu("Välj meny");
 
     }
 }

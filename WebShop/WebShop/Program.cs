@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using WebShop.Presentation;
+﻿using WebShop.Presentation;
 
 namespace WebShop;
 

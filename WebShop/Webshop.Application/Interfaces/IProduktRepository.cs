@@ -1,6 +1,6 @@
 ﻿using Webshop.Domain.Entitites;
 
-namespace Webshop.Domain.Interfaces;
+namespace Webshop.Application.Interfaces;
 
 public interface IProduktRepository
 {

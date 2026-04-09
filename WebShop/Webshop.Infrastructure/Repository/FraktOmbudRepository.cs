@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
-using Webshop.Domain.Interfaces;
 using Webshop.Infrastructure.EF;
 
 namespace Webshop.Infrastructure.Repositories;

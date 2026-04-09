@@ -29,6 +29,9 @@ public class ProduktConfiguration : IEntityTypeConfiguration<Produkt>
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(x => x.ÄrUtvald)
+            .IsRequired();
+
         builder.HasMany(x => x.ProduktOrdrar)
             .WithOne(x => x.Produkt)
             .HasForeignKey(x => x.ProduktId)

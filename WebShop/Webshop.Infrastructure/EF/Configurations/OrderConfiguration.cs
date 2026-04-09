@@ -10,6 +10,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.HasKey(o => o.Id);
 
+        builder.Property(o => o.Betalsätt)
+            .IsRequired()
+            .HasConversion<string>();
+
         builder.HasOne(o => o.Kund)
                .WithMany(k => k.Ordrar)
                .HasForeignKey(o => o.KundId)

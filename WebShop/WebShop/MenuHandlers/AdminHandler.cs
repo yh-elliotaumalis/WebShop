@@ -1,10 +1,13 @@
-﻿namespace HustlersAB.Admin.MenuHandlers;
+﻿using Webshop.Application.Interfaces;
+using Webshop.Domain.Entitites;
+
+namespace HustlersAB.Admin.MenuHandlers;
 
 public class AdminHandler
 {
-    private readonly IProductService _productService;
+    private readonly IProduktService _productService;
 
-    public AdminHandler(IProductService productService)
+    public AdminHandler(IProduktService productService)
     {
         _productService = productService;
     }
@@ -14,39 +17,28 @@ public class AdminHandler
         Console.Clear();
         Console.WriteLine("=== Lägg till ny produkt ===\n");
 
-        var selectedSubCategory = await SelectSubCategoryAsync();
+        var selectedSubCategory = await _productService.GetAllAsync();
         if (selectedSubCategory == null) return;
 
-        var name = ProductValidator.ReadRequiredString("Produktnamn: ");
-        var description = ProductValidator.ReadRequiredString("Beskrivning: ");
-        var price = ProductValidator.ReadDecimal("Pris: ", minValue: 0.01m);
-        var qty = ProductValidator.ReadInt("Lagersaldo: ", minValue: 0);
+        var name = ("Produktnamn: ");
+        var description = ("Beskrivning: ");
+        var price = ("Pris: ", minValue: 0.01m);
+        var qty = ("Lagersaldo: ", minValue: 0);
 
-        var product = new Product
+        var product = new Produkt
         {
             Id = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            Price = price,
-            QtyInStock = qty,
-            SubCategoryId = selectedSubCategory.Id
-
+            Namn = name,
+            Beskrivning = description,
         };
 
-        await _productService.AddProductAsync(product);
+        await _productService.AddAsync(product);
 
-        Console.WriteLine($"\nProdukten {product.Name} har lagts till i {selectedSubCategory.Name}!");
+        Console.WriteLine($"\nProdukten {product} har lagts till i {selectedSubCategory}!");
 
         Console.ReadKey(true);
     }
 
-    private async Task<ProductSubCategory?> SelectSubCategoryAsync()
-    {
-        var subCategories = await _productService.GetAllSubCategoriesAsync();
-        var menu = new SubCategoryMenu(subCategories.ToList());
-        menu.ShowMenu("Välj underkategori");
-        return menu.SelectedSubCategory;
-    }
 
 
 }

@@ -1,12 +1,13 @@
 ﻿using HustlersAB.Admin.MenuHandlers;
+using Webshop.Application.Interfaces;
 
 namespace HustlersAB.Admin.Menus;
 
 public class MainMenu : MenuBase
 {
-    private readonly IProductService _productService;
+    private readonly IProduktService _productService;
 
-    public MainMenu(IProductService productService)
+    public MainMenu(IProduktService productService)
     {
         _productService = productService;
 
@@ -22,7 +23,7 @@ public class MainMenu : MenuBase
                 return false;
 
             case 1:
-                var adminHandler = new AdminHandler(_productService); // eller vad din handler kräver
+                var adminHandler = new AdminHandler(_productService);
                 var adminMenu = new AdminMenu(adminHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;

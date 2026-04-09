@@ -14,7 +14,7 @@ public class Produkt
     public Guid KategoriId { get; set; }
     public bool ÄrUtvald { get; set; }
     public Kategori? Kategori { get; set; }
-    public List<ProduktOrder>? ProduktOrdrar { get; set; }
+    public List<ProduktOrder> ProduktOrdrar { get; set; } = [];
 
 
 

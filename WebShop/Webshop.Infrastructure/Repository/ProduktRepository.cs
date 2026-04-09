@@ -14,7 +14,7 @@ public class ProduktRepository(WebshopDbContext db) : IProduktRepository
 
     public async Task<IEnumerable<Produkt>> GetAllAsync()
         => await GetProdukterWithIncludes()
-            .ToListAsync();
+            .AsNoTracking().ToListAsync();
 
     public async Task<Produkt?> GetByIdAsync(Guid id)
         => await GetProdukterWithIncludes()

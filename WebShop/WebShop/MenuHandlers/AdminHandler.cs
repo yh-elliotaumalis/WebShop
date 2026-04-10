@@ -165,4 +165,16 @@ public class AdminHandler
         Console.ReadKey(true);
     }
 
+
+    public async Task HandleDeleteProductAsync()
+    {
+        Console.Clear();
+        Console.WriteLine("=== Ta bort produkt ===\n");
+        var products = await _productService.GetAllAsync();
+        var productIndex = OptionPicker("Välj en produkt att ta bort: ", products.Select(p => p.Namn).ToList());
+        var selectedProduct = products.ElementAt(productIndex);
+        await _productService.DeleteAsync(selectedProduct.Id);
+        Console.WriteLine($"\nProdukten {selectedProduct.Namn} har tagits bort!");
+        Console.ReadKey(true);
+    }
 }

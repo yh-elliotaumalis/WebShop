@@ -51,19 +51,33 @@ public class AdminHandler
     {
         Console.WriteLine(prompt);
 
-        for (int i = 0; i < options.Count; i++)
-        {
-            Console.WriteLine($"[{i + 1}] {options[i]}");
-        }
+        var selectedIndex = 0;
+        var cursorPosition = Console.GetCursorPosition();
 
         while (true)
         {
-            var input = Console.ReadLine();
-            if (int.TryParse(input, out int selectedIndex) && selectedIndex > 0 && selectedIndex <= options.Count)
+            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+            for (int i = 0; i < options.Count; i++)
             {
-                return selectedIndex - 1;
+                var prefix = (i == selectedIndex) ? "> " : "  ";
+                Console.WriteLine($"{prefix}{options[i]}");
             }
-            Console.WriteLine("Ogiltigt val. Försök igen.");
+
+            var key = Console.ReadKey(true).Key;
+
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    selectedIndex = Math.Max(0, selectedIndex - 1);
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    selectedIndex = Math.Min(options.Count - 1, selectedIndex + 1);
+                    break;
+
+                case ConsoleKey.Enter:
+                    return selectedIndex;
+            }
         }
     }
 

@@ -19,7 +19,7 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu().ShowMenu("Kund Meny");
+                new CustomerMenu(_productService).ShowMenu("Kund Meny");
                 return false;
 
             case 1:

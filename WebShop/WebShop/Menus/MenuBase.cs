@@ -15,7 +15,7 @@ public abstract class MenuBase
         }
     }
 
-    public void ShowMenu(string title)
+    public  void ShowMenu(string title)
     {
         int selectedIndex = 0;
 

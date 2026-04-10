@@ -22,6 +22,8 @@ public abstract class MenuBase
         while (true)
         {
             Console.Clear();
+            ShowWelcome();
+
             PrintMenu(selectedIndex, title);
 
             var key = Console.ReadKey(true).Key;
@@ -41,7 +43,27 @@ public abstract class MenuBase
                         return;
                     break;
             }
+
         }
+
+    }
+    private void ShowWelcome()
+    {
+        WriteCentered("Välkommen till KläderShoppen!");
+        WriteCentered("************************");
+        Console.WriteLine();
+
+
+        WriteCentered("Här Kan Du Bläddra Bland Produkter Och Hantera Ditt Konto.");
+        WriteCentered("Använd Piltangenterna För Att Navigera Och Enter För Att Välja.");
+        Console.WriteLine();
+    }
+    private void WriteCentered(string text)
+    {
+        int windowWidth = Console.WindowWidth;
+        int textLength = text.Length;
+        int spaces = (windowWidth - textLength) / 2;
+        Console.WriteLine(new string(' ', spaces) + text);
     }
 
     protected abstract bool ExecuteChoice(int selectedIndex);

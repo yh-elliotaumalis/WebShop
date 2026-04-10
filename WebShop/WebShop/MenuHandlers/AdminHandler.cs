@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Runtime.InteropServices;
 using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using Webshop.Domain.Enums;
@@ -34,7 +35,7 @@ public class AdminHandler
             Console.WriteLine("Ogiltigt tal. Försök igen.");
         }
     }
-     public static decimal ReadDecimal(string prompt)
+    public static decimal ReadDecimal(string prompt)
     {
         while (true)
         {
@@ -112,6 +113,56 @@ public class AdminHandler
         Console.ReadKey(true);
     }
 
+    public async Task HandleUpdateProductAsync()
+    {
+        Console.Clear();
+        Console.WriteLine("=== Uppdatera produkt ===\n");
 
+        var products = await _productService.GetAllAsync();
+
+        var productIndex = OptionPicker("Välj en produkt att uppdatera: ", products.Select(p => p.Namn).ToList());
+        var selectedProduct = products.ElementAt(productIndex);
+
+        var product = await _productService.GetByIdAsync(selectedProduct.Id);
+
+        var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek" };
+        var selectedOption = OptionPicker("Vad vill du uppdatera? ", options);
+
+        switch (selectedOption)
+        {
+            case 0:
+                product.Namn = ReadString("Nytt namn: ");
+                break;
+            case 1:
+                product.Beskrivning = ReadString("Ny beskrivning: ");
+                break;
+            case 2:
+                product.Pris = ReadDecimal("Nytt pris: ");
+                break;
+            case 3:
+                product.LagerAntal = ReadInt("Nytt lagerantal: ");
+                break;
+            case 4:
+                var categories = await _kategoriService.GetAllAsync();
+                var kategoriIndex = OptionPicker("Välj en ny kategori: ", categories.Select(k => k.Namn).ToList());
+                product.Kategori = categories.ElementAt(kategoriIndex);
+                break;
+            case 5:
+                var leverantörer = await _leverantörService.GetAllAsync();
+                var leverantörIndex = OptionPicker("Välj en ny leverantör: ", leverantörer.Select(l => l.Namn).ToList());
+                product.Leverantör = leverantörer.ElementAt(leverantörIndex);
+                break;
+            case 6:
+                product.Färg = ReadString("Ny färg: ");
+                break;
+            case 7:
+                product.Storlek = ReadString("Ny storlek: ");
+                break;
+        }
+        await _productService.UpdateAsync(product);
+
+        Console.WriteLine($"\nProdukten {product.Namn} har uppdaterats!");
+        Console.ReadKey(true);
+    }
 
 }

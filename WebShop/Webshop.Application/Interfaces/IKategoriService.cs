@@ -1,8 +1,8 @@
 ﻿using Webshop.Domain.Entitites;
 
-namespace Webshop.Domain.Interfaces;
+namespace Webshop.Application.Interfaces;
 
-public interface IKategoriRepository
+public interface IKategoriService
 {
     Task<IEnumerable<Kategori>> GetAllAsync();
     Task<Kategori?> GetByIdAsync(Guid id);

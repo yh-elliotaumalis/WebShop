@@ -28,15 +28,11 @@ public class AdminProductMenu : MenuBase
                 return false;
 
             case 1:
-                Console.Clear();
-                Console.WriteLine("Här ska vi senare ändra produkt.");
-                Console.ReadKey(true);
+                _handler.HandleUpdateProductAsync().GetAwaiter().GetResult();
                 return false;
 
             case 2:
-                Console.Clear();
-                Console.WriteLine("Här ska vi senare ta bort produkt.");
-                Console.ReadKey(true);
+                _handler.HandleDeleteProductAsync().GetAwaiter().GetResult();
                 return false;
 
             case 3:

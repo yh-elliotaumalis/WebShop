@@ -1,15 +1,20 @@
 ﻿using HustlersAB.Admin.MenuHandlers;
 using Webshop.Application.Interfaces;
+using Webshop.Application.Services;
 
 namespace HustlersAB.Admin.Menus;
 
 public class MainMenu : MenuBase
 {
     private readonly IProduktService _productService;
+    private readonly IKategoriService _kategoriService;
+    private readonly ILeverantörService _leverantörService;
 
-    public MainMenu(IProduktService productService)
+    public MainMenu(IProduktService productService, KategoriService kategoriService, LeverantörService leverantörService)
     {
         _productService = productService;
+        _kategoriService = kategoriService;
+        _leverantörService = leverantörService;
 
         _options = new[] { "Kund", "Admin", "Avsluta" };
     }
@@ -23,7 +28,7 @@ public class MainMenu : MenuBase
                 return false;
 
             case 1:
-                var adminHandler = new AdminHandler(_productService);
+                var adminHandler = new AdminHandler(_productService, _kategoriService, _leverantörService);
                 var adminMenu = new AdminMenu(adminHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;

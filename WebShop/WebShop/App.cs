@@ -25,9 +25,16 @@ public class App
         using var db = servicesProvider.GetRequiredService<WebshopDbContext>();
         WebShopSeeder.Seed(db);
 
-        var repo = new ProduktRepository(db);
-        var service = new ProduktService(repo);
-        var menu = new MainMenu(service);
+        var produktRepo = new ProduktRepository(db);
+        var produktService = new ProduktService(produktRepo);
+
+        var kategoriRepo = new KategoriRepository(db);
+        var kategoriService = new KategoriService(kategoriRepo);
+
+        var leverantörRepo = new LeverantörRepository(db);
+        var leverantörService = new LeverantörService(leverantörRepo);
+
+        var menu = new MainMenu(produktService, kategoriService, leverantörService);
         menu.ShowMenu("Välj meny");
 
     }

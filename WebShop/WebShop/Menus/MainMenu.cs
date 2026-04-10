@@ -44,7 +44,7 @@ public class MainMenu : MenuBase
     }
     private void ShowWelcome()
     {
-        WriteCentered("Välkommen till WebShop!");
+        WriteCentered("Välkommen till KläderShoppen!");
         WriteCentered("************************");
         Console.WriteLine();
 

@@ -6,12 +6,22 @@ public abstract class MenuBase
 
     protected void PrintMenu(int selectedIndex, string title)
     {
-        Console.WriteLine($"=== {title} ===\n");
+        WriteCentered($"=== {title} ===");
+        Console.WriteLine();
+
+        int maxLength = _options.Max(o => o.Length);
 
         for (int i = 0; i < _options.Length; i++)
         {
             string prefix = (i == selectedIndex) ? "> " : "  ";
-            Console.WriteLine($"{prefix}{_options[i]}");
+
+          
+            string paddedText = _options[i].PadRight(maxLength);
+
+           
+            string fullText = prefix + paddedText;
+
+            WriteCentered(fullText);
         }
     }
 
@@ -22,7 +32,12 @@ public abstract class MenuBase
         while (true)
         {
             Console.Clear();
+
+           
             ShowWelcome();
+
+            Console.WriteLine();
+            Console.WriteLine();
 
             PrintMenu(selectedIndex, title);
 
@@ -43,27 +58,26 @@ public abstract class MenuBase
                         return;
                     break;
             }
-
         }
-
     }
+
     private void ShowWelcome()
     {
         WriteCentered("Välkommen till KläderShoppen!");
-        WriteCentered("************************");
+        WriteCentered("********************************");
         Console.WriteLine();
 
-
-        WriteCentered("Här Kan Du Bläddra Bland Produkter Och Hantera Ditt Konto.");
-        WriteCentered("Använd Piltangenterna För Att Navigera Och Enter För Att Välja.");
-        Console.WriteLine();
+        WriteCentered("Här kan du bläddra bland produkter och handla enkelt.");
+        WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.");
     }
+
     private void WriteCentered(string text)
     {
         int windowWidth = Console.WindowWidth;
         int textLength = text.Length;
         int spaces = (windowWidth - textLength) / 2;
-        Console.WriteLine(new string(' ', spaces) + text);
+
+        Console.WriteLine(new string(' ', Math.Max(0, spaces)) + text);
     }
 
     protected abstract bool ExecuteChoice(int selectedIndex);

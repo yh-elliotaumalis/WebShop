@@ -73,6 +73,8 @@ public class CustomerMenu : MenuBase
                     break;
                 case ConsoleKey.Enter:
                     var vald = productList[selectedIndex];
+                    var product = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
+                    ShowProductDetails(product);
                     break;
                 case ConsoleKey.Escape:
                     return;
@@ -81,4 +83,21 @@ public class CustomerMenu : MenuBase
 
     }
 
+    private void ShowProductDetails(Produkt? product)
+    {
+        if (product == null) return;
+
+        Console.Clear();
+
+        Console.WriteLine($"{"Namn:".PadRight(20)}{product.Namn}");
+        Console.WriteLine($"{"Beskrivning:".PadRight(20)}{product.Beskrivning}");
+        Console.WriteLine($"{"Pris:".PadRight(20)}{product.Pris}");
+        Console.WriteLine($"{"Kategori:".PadRight(20)}{product.Kategori?.Namn}");
+        Console.WriteLine($"{"Léverantör:".PadRight(20)}{product.Leverantör?.Namn}");
+        Console.WriteLine($"{"LagerAntal:".PadRight(20)}{product.LagerAntal}");
+
+        while (Console.KeyAvailable) Console.ReadKey(true);
+        while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
+
+    }
 }

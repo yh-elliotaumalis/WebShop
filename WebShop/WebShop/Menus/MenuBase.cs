@@ -3,6 +3,9 @@
 public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
+    protected virtual void PopuleraProduker() { }
+    protected virtual void HandleProductKey(ConsoleKey key) { }
+
 
     protected void PrintMenu(int selectedIndex, string title)
     {
@@ -17,11 +20,8 @@ public abstract class MenuBase
 
           
             string paddedText = _options[i].PadRight(maxLength);
+            WriteCentered($"{prefix}{paddedText}");
 
-           
-            string fullText = prefix + paddedText;
-
-            WriteCentered(fullText);
         }
     }
 
@@ -33,8 +33,9 @@ public abstract class MenuBase
         {
             Console.Clear();
 
-           
             ShowWelcome();
+
+            PopuleraProduker();
 
             Console.WriteLine();
             Console.WriteLine();
@@ -57,11 +58,17 @@ public abstract class MenuBase
                     if (ExecuteChoice(selectedIndex))
                         return;
                     break;
+                case ConsoleKey.A:
+                case ConsoleKey.B:
+                case ConsoleKey.C:
+                    HandleProductKey(key);
+                    break;
+
             }
         }
     }
 
-    private void ShowWelcome()
+    protected void ShowWelcome()
     {
         WriteCentered("Välkommen till KläderShoppen!");
         WriteCentered("********************************");
@@ -71,7 +78,7 @@ public abstract class MenuBase
         WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.");
     }
 
-    private void WriteCentered(string text)
+    protected void WriteCentered(string text)
     {
         int windowWidth = Console.WindowWidth;
         int textLength = text.Length;

@@ -1,14 +1,17 @@
 ﻿using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Menus;
 
 namespace HustlersAB.Admin.Menus;
 
 public class AdminMenu : MenuBase
 {
     private readonly AdminProductHandler _productHandler;
+    private readonly AdminCategoryHandler _categoryHandler;
 
-    public AdminMenu(AdminProductHandler productHandler)
+    public AdminMenu(AdminProductHandler productHandler, AdminCategoryHandler categoryHandler)
     {
         _productHandler = productHandler;
+        _categoryHandler = categoryHandler;
 
         _options = new[]
         {
@@ -32,8 +35,8 @@ public class AdminMenu : MenuBase
 
             case 1:
                 Console.Clear();
-                Console.WriteLine("Kategoriadministration kommer senare...");
-                Console.ReadKey(true);
+                var categoryMenu = new AdminCategoryMenu(_categoryHandler);
+                categoryMenu.ShowMenu("CategoryMenu");
                 return false;
 
             case 2:

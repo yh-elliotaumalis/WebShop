@@ -1,3 +1,4 @@
+using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 
@@ -31,11 +32,21 @@ public class AdminProductHandler
         var price = ConsoleHelper.ReadDecimal("Pris: ");
         var amount = ConsoleHelper.ReadInt("Lagerantal: ");
 
-        var leverantörIndex = ConsoleHelper.OptionPicker("Välj en leverantör: ", leverantörer.Select(l => l.Namn).ToList());
-        var kategoriIndex = ConsoleHelper.OptionPicker("Välj en kategori: ", categories.Select(k => k.Namn).ToList());
+        var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
+        {
+            Console.WriteLine("Välj en leverantör:");
+            for (int i = 0; i < items.Count; i++)
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+        });
+        if (leverantör == null) return;
 
-        var leverantör = leverantörer.ElementAt(leverantörIndex);
-        var kategori = categories.ElementAt(kategoriIndex);
+        var kategori = MenuBase.NavigateList(categories.ToList(), (items, index) =>
+        {
+            Console.WriteLine("Välj en kategori:");
+            for (int i = 0; i < items.Count; i++)
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+        });
+        if (kategori == null) return;
 
         var product = new Produkt
         {
@@ -63,42 +74,63 @@ public class AdminProductHandler
 
         var products = await _productService.GetAllAsync();
 
-        var productIndex = ConsoleHelper.OptionPicker("Välj en produkt att uppdatera: ", products.Select(p => p.Namn).ToList());
-        var selectedProduct = products.ElementAt(productIndex);
+        var selectedProduct = MenuBase.NavigateList(products.ToList(), (items, index) =>
+        {
+            Console.WriteLine("Välj en produkt att uppdatera:");
+            for (int i = 0; i < items.Count; i++)
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+        });
+        if (selectedProduct == null) return;
 
         var product = await _productService.GetByIdAsync(selectedProduct.Id);
 
         var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek" };
-        var selectedOption = ConsoleHelper.OptionPicker("Vad vill du uppdatera? ", options);
-
-        switch (selectedOption)
+        var selectedField = MenuBase.NavigateList(options, (items, index) =>
         {
-            case 0:
+            Console.WriteLine("Vad vill du uppdatera?");
+            for (int i = 0; i < items.Count; i++)
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i]}");
+        });
+        if (selectedField == null) return;
+
+        switch (selectedField)
+        {
+            case "Namn":
                 product.Namn = ConsoleHelper.ReadString("Nytt namn: ");
                 break;
-            case 1:
+            case "Beskrivning":
                 product.Beskrivning = ConsoleHelper.ReadString("Ny beskrivning: ");
                 break;
-            case 2:
+            case "Pris":
                 product.Pris = ConsoleHelper.ReadDecimal("Nytt pris: ");
                 break;
-            case 3:
+            case "Lagerantal":
                 product.LagerAntal = ConsoleHelper.ReadInt("Nytt lagerantal: ");
                 break;
-            case 4:
+            case "Kategori":
                 var categories = await _kategoriService.GetAllAsync();
-                var kategoriIndex = ConsoleHelper.OptionPicker("Välj en ny kategori: ", categories.Select(k => k.Namn).ToList());
-                product.Kategori = categories.ElementAt(kategoriIndex);
+                var kategori = MenuBase.NavigateList(categories.ToList(), (items, index) =>
+                {
+                    Console.WriteLine("Välj en ny kategori:");
+                    for (int i = 0; i < items.Count; i++)
+                        Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+                });
+                if (kategori != null) product.Kategori = kategori;
                 break;
-            case 5:
+            case "Leverantör":
                 var leverantörer = await _leverantörService.GetAllAsync();
-                var leverantörIndex = ConsoleHelper.OptionPicker("Välj en ny leverantör: ", leverantörer.Select(l => l.Namn).ToList());
-                product.Leverantör = leverantörer.ElementAt(leverantörIndex);
+                var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
+                {
+                    Console.WriteLine("Välj en ny leverantör:");
+                    for (int i = 0; i < items.Count; i++)
+                        Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+                });
+                if (leverantör != null) product.Leverantör = leverantör;
                 break;
-            case 6:
+            case "Färg":
                 product.Färg = ConsoleHelper.ReadString("Ny färg: ");
                 break;
-            case 7:
+            case "Storlek":
                 product.Storlek = ConsoleHelper.ReadString("Ny storlek: ");
                 break;
         }
@@ -115,8 +147,13 @@ public class AdminProductHandler
         Console.WriteLine("=== Ta bort produkt ===\n");
 
         var products = await _productService.GetAllAsync();
-        var productIndex = ConsoleHelper.OptionPicker("Välj en produkt att ta bort: ", products.Select(p => p.Namn).ToList());
-        var selectedProduct = products.ElementAt(productIndex);
+        var selectedProduct = MenuBase.NavigateList(products.ToList(), (items, index) =>
+        {
+            Console.WriteLine("Välj en produkt att ta bort:");
+            for (int i = 0; i < items.Count; i++)
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+        });
+        if (selectedProduct == null) return;
 
         await _productService.DeleteAsync(selectedProduct.Id);
 

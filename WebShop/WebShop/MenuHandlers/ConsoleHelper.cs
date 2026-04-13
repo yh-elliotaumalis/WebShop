@@ -31,38 +31,4 @@ public static class ConsoleHelper
             Console.WriteLine("Ogiltigt tal. Försök igen.");
         }
     }
-
-    public static int OptionPicker(string prompt, List<string> options)
-    {
-        Console.WriteLine(prompt);
-
-        var selectedIndex = 0;
-        var cursorPosition = Console.GetCursorPosition();
-
-        while (true)
-        {
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
-            for (int i = 0; i < options.Count; i++)
-            {
-                var prefix = (i == selectedIndex) ? "> " : "  ";
-                Console.WriteLine($"{prefix}{options[i]}");
-            }
-
-            var key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selectedIndex = Math.Max(0, selectedIndex - 1);
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    selectedIndex = Math.Min(options.Count - 1, selectedIndex + 1);
-                    break;
-
-                case ConsoleKey.Enter:
-                    return selectedIndex;
-            }
-        }
-    }
 }

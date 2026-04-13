@@ -53,9 +53,34 @@ public class CustomerMenu : MenuBase
         return input;
     }
 
+    private void DrawSearchResults(List<Produkt> list, string query, int selectedIndex)
+    {
+        Console.WriteLine($"Sök resultat för {query}\n");
+        for (int i = 0; i < list.Count; i++)
+        {
+            var markering = i == selectedIndex ? "> " : "  ";
+            Console.WriteLine($"{markering}{list[i].Namn.PadRight(20)} {list[i].Pris} kr");
+        }
+    }
+
     private void SearchCatalog()
     {
-        throw new NotImplementedException();
+        var input = GetSearchInput();
+        if (input == null) return;
+
+        var list = _handler.SearchProductAsync(input).GetAwaiter().GetResult().ToList();
+        if (!list.Any())
+        {
+            Console.WriteLine("Inga produkter hittades.");
+            Console.ReadKey(true);
+            return;
+        }
+
+        var vald = NavigateList(list, (l, i) => DrawSearchResults(l, input, i));
+        if (vald == null) return;
+
+        var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
+        ShowProductDetails(produkt);
     }
 
     private void DrawCatalog(IEnumerable<IGrouping<string, Produkt>> groups, int selectedIndex)

@@ -29,7 +29,8 @@ public class MainMenu : MenuBase
 
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
-                var adminMenu = new AdminMenu(productHandler);
+                var categoryHandler = new AdminCategoryHandler(_kategoriService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

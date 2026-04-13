@@ -97,7 +97,9 @@ public abstract class MenuBase
         Console.WriteLine();
 
         WriteCentered("Här kan du bläddra bland produkter och handla enkelt.");
-        WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.");
+        WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.\n");
+
+        WriteCentered("TAB = byta fokus | ← → = produkter | ↑ ↓ = meny | Enter = välj\n");
     }
 
     protected void WriteCentered(string text)

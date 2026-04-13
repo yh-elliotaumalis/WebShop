@@ -1,6 +1,7 @@
 ﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Validator;
 
 namespace HustlersAB.Admin.Menus;
 
@@ -10,7 +11,7 @@ public class CustomerMenu : MenuBase
     public CustomerMenu(IProduktService productService)
     {
         _handler = new CustomerProductHandler(productService);
-        _options = new[] { "Handla produkter", "Varukorgen", "Tillbaka" };
+        _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
 
     protected override bool ExecuteChoice(int selectedIndex)
@@ -20,18 +21,41 @@ public class CustomerMenu : MenuBase
             case 0:
                 ShowCatalog();
                 return false;
-
             case 1:
+                SearchCatalog();
+                return false;
+
+            case 2:
                 Console.Clear();
                 Console.WriteLine("Varukorgen kommer senare...");
                 Console.ReadKey(true);
                 return false;
 
-            case 2:
+            case 3:
                 return true;
         }
 
         return false;
+    }
+    private string? GetSearchInput()
+    {
+        Console.Clear();
+        Console.Write("Sök produkt: ");
+        var input = Console.ReadLine() ?? "";
+
+        var error = new SearchValidator().Validate(input);
+        if (error != null)
+        {
+            Console.WriteLine(error);
+            Console.ReadKey(true);
+            return null;
+        }
+        return input;
+    }
+
+    private void SearchCatalog()
+    {
+        throw new NotImplementedException();
     }
 
     private void DrawCatalog(IEnumerable<IGrouping<string, Produkt>> groups, int selectedIndex)

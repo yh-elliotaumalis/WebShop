@@ -4,12 +4,13 @@ public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
 
- 
     protected bool _isProductFocused = true;
+
+   
+    protected virtual void LoadData() { }
 
     protected virtual void PopuleraProduker() { }
 
-   
     protected virtual void MoveLeft() { }
     protected virtual void MoveRight() { }
     protected virtual void HandleProductEnter() { }
@@ -19,7 +20,7 @@ public abstract class MenuBase
         WriteCentered($"=== {title} ===");
         Console.WriteLine();
 
-        int maxLength = _options.Max(o => o.Length);
+        int maxLength = _options.Length > 0 ? _options.Max(o => o.Length) : 0;
 
         for (int i = 0; i < _options.Length; i++)
         {
@@ -33,6 +34,9 @@ public abstract class MenuBase
     public void ShowMenu(string title)
     {
         int selectedIndex = 0;
+
+       
+        LoadData();
 
         while (true)
         {
@@ -66,12 +70,12 @@ public abstract class MenuBase
                     break;
 
                 case ConsoleKey.UpArrow:
-                    if (!_isProductFocused)
+                    if (!_isProductFocused && _options.Length > 0)
                         selectedIndex = (selectedIndex - 1 + _options.Length) % _options.Length;
                     break;
 
                 case ConsoleKey.DownArrow:
-                    if (!_isProductFocused)
+                    if (!_isProductFocused && _options.Length > 0)
                         selectedIndex = (selectedIndex + 1) % _options.Length;
                     break;
 
@@ -99,7 +103,7 @@ public abstract class MenuBase
         WriteCentered("Här kan du bläddra bland produkter och handla enkelt.");
         WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.\n");
 
-        WriteCentered("TAB = switch focus | Left/Right = products | Up/Down = menu | Enter = select");
+        WriteCentered("TAB = switch focus | Left/Right = products | Up/Down = menu | Enter = select\n");
     }
 
     protected void WriteCentered(string text)

@@ -4,12 +4,12 @@ public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
 
-    // 👇 اینو اضافه کردیم
+ 
     protected bool _isProductFocused = true;
 
     protected virtual void PopuleraProduker() { }
 
-    // 👇 متدهای جدید
+   
     protected virtual void MoveLeft() { }
     protected virtual void MoveRight() { }
     protected virtual void HandleProductEnter() { }

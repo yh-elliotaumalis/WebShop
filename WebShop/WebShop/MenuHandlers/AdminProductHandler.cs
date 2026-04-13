@@ -1,6 +1,7 @@
 using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
+using WebShop.Presentation.Validator;
 
 namespace WebShop.Presentation.MenuHandlers;
 
@@ -26,11 +27,47 @@ public class AdminProductHandler
         var leverantörer = await _leverantörService.GetAllAsync();
 
         var namn = ConsoleHelper.ReadString("Produktnamn: ");
+        if (!ProductValidator.ValidateProductName(namn))
+        {
+            Console.WriteLine("Ogiltigt produktnamn. Det måste vara minst 3 tecken långt.");
+            Console.ReadKey(true);
+            return;
+        }
         var description = ConsoleHelper.ReadString("Beskrivning: ");
+        if (!ProductValidator.ValidateProductDescription(description))
+        {
+            Console.WriteLine("Ogiltig beskrivning. Den måste vara minst 10 tecken lång.");
+            Console.ReadKey(true);
+            return;
+        }
         var color = ConsoleHelper.ReadString("Färg: ");
+        if (!ProductValidator.ValidateProductColor(color))
+        {
+            Console.WriteLine("Ogiltig färg.");
+            Console.ReadKey(true);
+            return;
+        }
         var size = ConsoleHelper.ReadString("Storlek: ");
+        if (!ProductValidator.ValidateProductSize(size))
+        {
+            Console.WriteLine("Ogiltig storlek.");
+            Console.ReadKey(true);
+            return;
+        }
         var price = ConsoleHelper.ReadDecimal("Pris: ");
+        if (!ProductValidator.ValidateProductPrice(price))
+        {
+            Console.WriteLine("Ogiltigt pris. Det måste vara ett positivt tal.");
+            Console.ReadKey(true);
+            return;
+        }
         var amount = ConsoleHelper.ReadInt("Lagerantal: ");
+        if (!ProductValidator.ValidateProductStock(amount))
+        {
+            Console.WriteLine("Ogiltigt lagerantal. Det måste vara ett icke-negativt heltal.");
+            Console.ReadKey(true);
+            return;
+        }
 
         var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
         {
@@ -103,16 +140,44 @@ public class AdminProductHandler
         switch (selectedField)
         {
             case "Namn":
-                product.Namn = ConsoleHelper.ReadString("Nytt namn: ");
+                var newName = ConsoleHelper.ReadString("Nytt namn: ");
+                if (!ProductValidator.ValidateProductName(newName))
+                {
+                    Console.WriteLine("Ogiltigt produktnamn. Det måste vara minst 3 tecken långt.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.Namn = newName;
                 break;
             case "Beskrivning":
-                product.Beskrivning = ConsoleHelper.ReadString("Ny beskrivning: ");
+                var newDescription = ConsoleHelper.ReadString("Ny beskrivning: ");
+                if (!ProductValidator.ValidateProductDescription(newDescription))
+                {
+                    Console.WriteLine("Ogiltig beskrivning. Den måste vara minst 10 tecken lång.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.Beskrivning = newDescription;
                 break;
             case "Pris":
-                product.Pris = ConsoleHelper.ReadDecimal("Nytt pris: ");
+                var newPrice = ConsoleHelper.ReadDecimal("Nytt pris: ");
+                if (!ProductValidator.ValidateProductPrice(newPrice))
+                {
+                    Console.WriteLine("Ogiltigt pris. Det måste vara ett positivt tal.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.Pris = newPrice;
                 break;
             case "Lagerantal":
-                product.LagerAntal = ConsoleHelper.ReadInt("Nytt lagerantal: ");
+                var newStock = ConsoleHelper.ReadInt("Nytt lagerantal: ");
+                if (!ProductValidator.ValidateProductStock(newStock))
+                {
+                    Console.WriteLine("Ogiltigt lagerantal. Det måste vara 0 eller ett positivt tal.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.LagerAntal = newStock;
                 break;
             case "Kategori":
                 var categories = await _kategoriService.GetAllAsync();
@@ -135,10 +200,24 @@ public class AdminProductHandler
                 if (leverantör != null) product.Leverantör = leverantör;
                 break;
             case "Färg":
-                product.Färg = ConsoleHelper.ReadString("Ny färg: ");
+                var newColor = ConsoleHelper.ReadString("Ny färg: ");
+                if (!ProductValidator.ValidateProductColor(newColor))
+                {
+                    Console.WriteLine("Ogiltig färg.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.Färg = newColor;
                 break;
             case "Storlek":
-                product.Storlek = ConsoleHelper.ReadString("Ny storlek: ");
+                var newSize = ConsoleHelper.ReadString("Ny storlek: ");
+                if (!ProductValidator.ValidateProductSize(newSize))
+                {
+                    Console.WriteLine("Ogiltig storlek.");
+                    Console.ReadKey(true);
+                    break;
+                }
+                product.Storlek = newSize;
                 break;
         }
 

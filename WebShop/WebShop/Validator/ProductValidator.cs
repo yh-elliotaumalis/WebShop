@@ -21,6 +21,19 @@ public class ProductValidator
         return true;
     }
 
+    public static bool ValidateProductDescription(string description)
+    {
+        if (string.IsNullOrEmpty(description))
+        {
+            return false;
+        }
+        if (description.Length < 10)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public static bool ValidateProductPrice(decimal price)
     {
         return price > 0;

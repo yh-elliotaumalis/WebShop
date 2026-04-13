@@ -6,6 +6,7 @@ using Webshop.Application.Services;
 using Webshop.Infrastructure.EF;
 using Webshop.Infrastructure.EF.Seeds;
 using Webshop.Infrastructure.Repositories;
+using Webshop.Presentation.Menus;
 
 namespace WebShop.Presentation;
 

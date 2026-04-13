@@ -1,77 +1,132 @@
-﻿using HustlersAB.Admin.MenuHandlers;
-using System.Threading.Channels;
+﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
-using Webshop.Application.Services;
 using WebShop.Presentation.UI;
 
-namespace HustlersAB.Admin.Menus;
+namespace Webshop.Presentation.Menus;
 
 public class MainMenu : MenuBase
 {
     private readonly IProduktService _productService;
-    private readonly IKategoriService _kategoriService;
-    private readonly ILeverantörService _leverantörService;
 
-    public int _selectedProductIndex = 0;
-    public MainMenu(IProduktService productService, KategoriService kategoriService, LeverantörService leverantörService)
+    private int _selectedProductIndex = 0;
+
+    public MainMenu(IProduktService productService, Application.Services.KategoriService kategoriService, Application.Services.LeverantörService leverantörService)
     {
         _productService = productService;
-        _kategoriService = kategoriService;
-        _leverantörService = leverantörService;
 
-        _options = new[] { "Kund", "Admin", "Avsluta" };
-    }
- 
-    protected override void PopuleraProduker()
-    {
-
-        var products = _productService.GetBestSellersAsync(3)
-         .GetAwaiter()
-         .GetResult()
-         .ToList();
-
-        WriteCentered("=== Populära Produkter ===");
-        Console.WriteLine();
-
-        int boxWidth = 30;
-        int spacing = 5;
-
-        int totalWidth = (products.Count * boxWidth) + ((products.Count - 1) * spacing);
-        int startX = (Console.WindowWidth - totalWidth) / 2;
-
-        int y = Console.CursorTop + 1;
-
-        for (int i = 0; i < products.Count; i++)
+        _options = new[]
         {
-
-            var p = products[i];
-            int x = startX + i * (boxWidth + spacing);
-
-            var box = new Box(x, y, boxWidth, 10, p.Namn);
-            box.Draw();
-
-            Console.SetCursorPosition(x + 2, y + 2);
-            Console.Write($"Pris: {p.Pris} kr");
-
-            Console.SetCursorPosition(x + 2, y + 3);
-            Console.Write($"Färg: {p.Färg}");
-
-            Console.SetCursorPosition(x + 2, y + 4);
-            Console.Write($"Kategori: {p.Kategori?.Namn}");
-
-            Console.SetCursorPosition(x + 2, y + 5);
-            Console.Write($"Lager: {p.LagerAntal}");
-
-            Console.SetCursorPosition(x + 2, y + 7);
-            char key = (char)('A' + i);
-            Console.Write($"[{key}] Köp");
-
-
-        }
-        Console.SetCursorPosition(0, y + 12);
-
+            "Kund",
+            "Admin",
+            "Avsluta"
+        };
     }
-    protected override void HandleProductKey(ConsoleKey key)
+
+    protected override void PopuleraProduker()
+{
+    var products = _productService
+        .GetBestSellersAsync(3)
+        .GetAwaiter()
+        .GetResult()
+        .ToList();
+
+    WriteCentered("=== Populära Produkter ===");
+    Console.WriteLine();
+
+    int spacing = 4;
+
+ 
+    int boxWidth = Math.Min(
+        40,
+        (Console.WindowWidth - (products.Count - 1) * spacing) / products.Count
+    );
+
+    int totalWidth = boxWidth * products.Count + spacing * (products.Count - 1);
+    int startX = Math.Max(0, (Console.WindowWidth - totalWidth) / 2);
+    int startY = Console.CursorTop;
+
+    for (int i = 0; i < products.Count; i++)
+    {
+        var p = products[i];
+
+        int x = startX + i * (boxWidth + spacing);
+        int y = startY;
+
+     
+        Console.SetCursorPosition(x, y);
+        Console.Write("┌" + new string('─', boxWidth - 2) + "┐");
+
+       
+        Console.SetCursorPosition(x, y + 1);
+        Console.Write("│ " + p.Namn.PadRight(boxWidth - 4) + " │");
+
+    
+        Console.SetCursorPosition(x, y + 2);
+        string price = $"Pris: {p.Pris:0.00} kr";
+        Console.Write("│ " + price.PadRight(boxWidth - 4) + " │");
+
+       
+        Console.SetCursorPosition(x, y + 3);
+        string color = $"Färg: {p.Färg}";
+        Console.Write("│ " + color.PadRight(boxWidth - 4) + " │");
+
+      
+        Console.SetCursorPosition(x, y + 4);
+        string cat = $"Kategori: {p.Kategori.Namn}";
+        Console.Write("│ " + cat.PadRight(boxWidth - 4) + " │");
+
+        
+        Console.SetCursorPosition(x, y + 5);
+        string stock = $"Lager: {p.LagerAntal}";
+        Console.Write("│ " + stock.PadRight(boxWidth - 4) + " │");
+
+      
+        Console.SetCursorPosition(x, y + 6);
+        Console.Write("│ " + new string(' ', boxWidth - 4) + " │");
+
+      
+        Console.SetCursorPosition(x, y + 7);
+
+        string button = "[ Add to cart ]";
+        int padding = (boxWidth - 2 - button.Length) / 2;
+
+        string buttonLine = "│"
+            + new string(' ', padding)
+            + button
+            + new string(' ', boxWidth - 2 - padding - button.Length)
+            + "│";
+
+        if (i == _selectedProductIndex && _isProductFocused)
+        {
+            Console.BackgroundColor = Theme.MenuSelectedBg;
+            Console.ForegroundColor = Theme.MenuSelectedText;
+            Console.Write(buttonLine);
+            Console.ResetColor();
+        }
+        else
+        {
+            Console.Write(buttonLine);
+        }
+
+        
+        Console.SetCursorPosition(x, y + 8);
+        Console.Write("└" + new string('─', boxWidth - 2) + "┘");
+    }
+
+    Console.SetCursorPosition(0, startY + 10);
+}
+
+    protected override void MoveLeft()
+    {
+        _selectedProductIndex = Math.Max(0, _selectedProductIndex - 1);
+    }
+
+    protected override void MoveRight()
+    {
+        _selectedProductIndex = Math.Min(2, _selectedProductIndex + 1);
+    }
+
+    protected override void HandleProductEnter()
     {
         var products = _productService
             .GetBestSellersAsync(3)
@@ -79,63 +134,36 @@ public class MainMenu : MenuBase
             .GetResult()
             .ToList();
 
-        int index = key - ConsoleKey.A;
+        var selectedProduct = products[_selectedProductIndex];
 
-        if (index >= 0 && index < products.Count)
-        {
-            var selectedProduct = products[index];
+        Console.SetCursorPosition(10, Console.WindowHeight - 2);
+        Console.ForegroundColor = Theme.Message;
+        Console.Write($"{selectedProduct.Namn} added to cart!");
+        Console.ResetColor();
 
-            Console.SetCursorPosition(10, Console.WindowHeight - 2);
-            Console.ForegroundColor = Theme.Message;
-            // Här kan du lägga till logik för att lägga produkten i varukorgen
-            Console.Write($"{selectedProduct.Namn} har lagts till i Varukorgen!");
-            Console.ResetColor();
-
-            Console.ReadKey();
-        }
+        Console.ReadKey();
     }
-
-    //Console.WriteLine();
-
-    //WriteCentered("=== Populära Produkter ===");
-    //Console.WriteLine();
-    //int i = 1;
-    //foreach (var product in products)
-    //{
-    //    WriteCentered($"--- {product.Namn} ---");
-    //    WriteCentered($"Saldo : {product.Pris} kr");
-    //    WriteCentered($"Färg : {product.Färg}");
-    //    WriteCentered($"Kategori : {product.Kategori?.Namn}");
-    //    WriteCentered($"Lager : {product.LagerAntal}");
-    //    Console.WriteLine();
-    //    i++;
-    //}
-
-
 
     protected override bool ExecuteChoice(int selectedIndex)
     {
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService).ShowMenu("Kund Meny");
+                Console.Clear();
+                Console.WriteLine("Kund meny...");
+                Console.ReadKey();
                 return false;
 
             case 1:
-                var adminHandler = new AdminHandler(_productService, _kategoriService, _leverantörService);
-                var adminMenu = new AdminMenu(adminHandler);
-                adminMenu.ShowMenu("Admin Meny");
+                Console.Clear();
+                Console.WriteLine("Admin meny...");
+                Console.ReadKey();
                 return false;
 
             case 2:
-                Environment.Exit(0);
                 return true;
         }
 
         return false;
     }
-
-
-
 }
-

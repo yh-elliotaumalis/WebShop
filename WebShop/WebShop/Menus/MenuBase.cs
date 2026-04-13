@@ -3,9 +3,16 @@
 public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
-    protected virtual void PopuleraProduker() { }
-    protected virtual void HandleProductKey(ConsoleKey key) { }
 
+    // 👇 اینو اضافه کردیم
+    protected bool _isProductFocused = true;
+
+    protected virtual void PopuleraProduker() { }
+
+    // 👇 متدهای جدید
+    protected virtual void MoveLeft() { }
+    protected virtual void MoveRight() { }
+    protected virtual void HandleProductEnter() { }
 
     protected void PrintMenu(int selectedIndex, string title)
     {
@@ -17,11 +24,9 @@ public abstract class MenuBase
         for (int i = 0; i < _options.Length; i++)
         {
             string prefix = (i == selectedIndex) ? "> " : "  ";
-
-          
             string paddedText = _options[i].PadRight(maxLength);
-            WriteCentered($"{prefix}{paddedText}");
 
+            WriteCentered($"{prefix}{paddedText}");
         }
     }
 
@@ -46,24 +51,41 @@ public abstract class MenuBase
 
             switch (key)
             {
+                case ConsoleKey.Tab:
+                    _isProductFocused = !_isProductFocused;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (_isProductFocused)
+                        MoveLeft();
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    if (_isProductFocused)
+                        MoveRight();
+                    break;
+
                 case ConsoleKey.UpArrow:
-                    selectedIndex = (selectedIndex - 1 + _options.Length) % _options.Length;
+                    if (!_isProductFocused)
+                        selectedIndex = (selectedIndex - 1 + _options.Length) % _options.Length;
                     break;
 
                 case ConsoleKey.DownArrow:
-                    selectedIndex = (selectedIndex + 1) % _options.Length;
+                    if (!_isProductFocused)
+                        selectedIndex = (selectedIndex + 1) % _options.Length;
                     break;
 
                 case ConsoleKey.Enter:
-                    if (ExecuteChoice(selectedIndex))
-                        return;
+                    if (_isProductFocused)
+                    {
+                        HandleProductEnter();
+                    }
+                    else
+                    {
+                        if (ExecuteChoice(selectedIndex))
+                            return;
+                    }
                     break;
-                case ConsoleKey.A:
-                case ConsoleKey.B:
-                case ConsoleKey.C:
-                    HandleProductKey(key);
-                    break;
-
             }
         }
     }

@@ -1,13 +1,14 @@
-﻿using HustlersAB.Admin.MenuHandlers;
+﻿using WebShop.Presentation.MenuHandlers;
 
 namespace HustlersAB.Admin.Menus;
 
 public class AdminMenu : MenuBase
 {
-    private readonly AdminHandler _adminHandler;
-    public AdminMenu(AdminHandler adminHandler)
+    private readonly AdminProductHandler _productHandler;
+
+    public AdminMenu(AdminProductHandler productHandler)
     {
-        _adminHandler = adminHandler;
+        _productHandler = productHandler;
 
         _options = new[]
         {
@@ -25,7 +26,7 @@ public class AdminMenu : MenuBase
         {
             case 0:
                 Console.Clear();
-                var productMenu = new AdminProductMenu(_adminHandler);
+                var productMenu = new AdminProductMenu(_productHandler);
                 productMenu.ShowMenu("ProductMenu");
                 return false;
 

@@ -1,6 +1,6 @@
-﻿using HustlersAB.Admin.MenuHandlers;
-using Webshop.Application.Interfaces;
+﻿using Webshop.Application.Interfaces;
 using Webshop.Application.Services;
+using WebShop.Presentation.MenuHandlers;
 
 namespace HustlersAB.Admin.Menus;
 
@@ -39,8 +39,8 @@ public class MainMenu : MenuBase
                 return false;
 
             case 1:
-                var adminHandler = new AdminHandler(_productService, _kategoriService, _leverantörService);
-                var adminMenu = new AdminMenu(adminHandler);
+                var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
+                var adminMenu = new AdminMenu(productHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

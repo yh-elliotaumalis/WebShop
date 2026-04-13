@@ -24,7 +24,19 @@ public class AdminProductHandler
         Console.WriteLine("=== Lägg till ny produkt ===\n");
 
         var categories = await _kategoriService.GetAllAsync();
+        if (!categories.Any())
+        {
+            Console.WriteLine("Inga kategorier finns. Skapa en kategori innan du lägger till produkter.");
+            Console.ReadKey(true);
+            return;
+        }
         var leverantörer = await _leverantörService.GetAllAsync();
+        if (!leverantörer.Any())
+        {
+            Console.WriteLine("Inga leverantörer finns. Skapa en leverantör innan du lägger till produkter.");
+            Console.ReadKey(true);
+            return;
+        }
 
         var namn = ConsoleHelper.ReadString("Produktnamn: ");
         if (!ProductValidator.ValidateProductName(namn))
@@ -181,6 +193,12 @@ public class AdminProductHandler
                 break;
             case "Kategori":
                 var categories = await _kategoriService.GetAllAsync();
+                if (!categories.Any())
+                {
+                    Console.WriteLine("Inga kategorier finns. Skapa en kategori innan du uppdaterar produkten.");
+                    Console.ReadKey(true);
+                    break;
+                }
                 var kategori = MenuBase.NavigateList(categories.ToList(), (items, index) =>
                 {
                     Console.WriteLine("Välj en ny kategori:");
@@ -191,6 +209,12 @@ public class AdminProductHandler
                 break;
             case "Leverantör":
                 var leverantörer = await _leverantörService.GetAllAsync();
+                if (!leverantörer.Any())
+                {
+                    Console.WriteLine("Inga leverantörer finns. Skapa en leverantör innan du uppdaterar produkten.");
+                    Console.ReadKey(true);
+                    break;
+                }
                 var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
                 {
                     Console.WriteLine("Välj en ny leverantör:");

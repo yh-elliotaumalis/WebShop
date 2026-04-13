@@ -93,6 +93,13 @@ public class AdminProductHandler
         });
         if (selectedField == null) return;
 
+        if (product == null)
+        {
+            Console.WriteLine("Produkten kunde inte hittas.");
+            Console.ReadKey(true);
+            return;
+        }
+
         switch (selectedField)
         {
             case "Namn":

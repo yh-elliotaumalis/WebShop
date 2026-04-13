@@ -15,7 +15,7 @@ namespace Webshop.Application.Services
         {
             _httpClient = new HttpClient();
 
-            _httpClient.DefaultRequestHeaders.Add("x-Api-Key", "6cwGGKJg2rUoPQzBmjE7sLhPTsQkquSkjCvXl20z");
+            _httpClient.DefaultRequestHeaders.Add("x-Api-Key", "Här kommer API Nyckel");
 
         }
         public async Task<double> GetTemperatureAsync()

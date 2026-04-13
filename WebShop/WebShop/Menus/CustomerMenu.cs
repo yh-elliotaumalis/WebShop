@@ -51,35 +51,15 @@ public class CustomerMenu : MenuBase
 
     private void ShowCatalog()
     {
-        Console.Clear();
-        var products = _handler.GetAllProductsAsync().GetAwaiter().GetResult();
-        var productList = products.ToList();
+
+        var productList = _handler.GetAllProductsAsync().GetAwaiter().GetResult().ToList();
         var groups = productList.GroupBy(p => p.Kategori!.Namn);
-        int selectedIndex = 0;
 
-        while (true)
-        {
-            Console.Clear();
-            DrawCatalog(groups, selectedIndex);
-            var key = Console.ReadKey(true).Key;
+        var vald = NavigateList(productList, (list, i) => DrawCatalog(groups, i));
+        if (vald == null) return;
+        var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
 
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selectedIndex = Math.Max(0, selectedIndex - 1);
-                    break;
-                case ConsoleKey.DownArrow:
-                    selectedIndex = Math.Min(productList.Count - 1, selectedIndex + 1);
-                    break;
-                case ConsoleKey.Enter:
-                    var vald = productList[selectedIndex];
-                    var product = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
-                    ShowProductDetails(product);
-                    break;
-                case ConsoleKey.Escape:
-                    return;
-            }
-        }
+        ShowProductDetails(produkt);
 
     }
 

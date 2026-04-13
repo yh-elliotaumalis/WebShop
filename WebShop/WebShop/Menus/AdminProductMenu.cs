@@ -1,12 +1,12 @@
-﻿using HustlersAB.Admin.MenuHandlers;
+﻿using WebShop.Presentation.MenuHandlers;
 
 namespace HustlersAB.Admin.Menus;
 
 public class AdminProductMenu : MenuBase
 {
-    private readonly AdminHandler _handler;
+    private readonly AdminProductHandler _handler;
 
-    public AdminProductMenu(AdminHandler handler)
+    public AdminProductMenu(AdminProductHandler handler)
     {
         _handler = handler;
 

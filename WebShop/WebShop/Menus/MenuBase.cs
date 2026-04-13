@@ -99,7 +99,7 @@ public abstract class MenuBase
         WriteCentered("Här kan du bläddra bland produkter och handla enkelt.");
         WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.\n");
 
-        WriteCentered("TAB = byta fokus | ← → = produkter | ↑ ↓ = meny | Enter = välj\n");
+        WriteCentered("TAB = switch focus | Left/Right = products | Up/Down = menu | Enter = select");
     }
 
     protected void WriteCentered(string text)

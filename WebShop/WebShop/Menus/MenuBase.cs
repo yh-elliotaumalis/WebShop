@@ -79,7 +79,7 @@ public abstract class MenuBase
 
         Console.WriteLine(new string(' ', Math.Max(0, spaces)) + text);
     }
-    protected static T? NavigateList<T>(List<T> items, Action<List<T>, int> draw) where T : class
+    public static T? NavigateList<T>(List<T> items, Action<List<T>, int> draw) where T : class
     {
         int selectedIndex = 0;
         while (true)

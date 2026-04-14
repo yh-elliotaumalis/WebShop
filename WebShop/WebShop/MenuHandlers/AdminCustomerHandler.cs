@@ -264,18 +264,6 @@ public class AdminCustomerHandler
         Console.WriteLine("Kunden har uppdaterats.");
         Console.ReadKey(true);
     }
-
-    public async Task HandleUpdateCategoryAsync()
-    {
-        Console.Clear();
-        Console.WriteLine("=== Uppdatera kategori ===\n");
-
-        
-
-        //Console.WriteLine($"Kategori '{newName}' har uppdaterats.");
-        Console.ReadKey(true);
-    }
-
     public async Task HandleDeleteCustomerAsync()
     {
         Console.Clear();

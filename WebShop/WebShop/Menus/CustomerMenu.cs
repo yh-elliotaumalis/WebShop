@@ -104,17 +104,18 @@ public class CustomerMenu : MenuBase
 
     private void ShowCatalog()
     {
-
         var productList = _handler.GetAllProductsAsync().GetAwaiter().GetResult().ToList();
         var groups = productList.GroupBy(p => p.Kategori!.Namn);
 
-        var vald = NavigateList(productList, (list, i) => DrawCatalog(groups, i));
-        if (vald == null) return;
-        var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
-
-        ShowProductDetails(produkt);
-
+        while (true)
+        {
+            var vald = NavigateList(productList, (list, i) => DrawCatalog(groups, i));
+            if (vald == null) return;
+            var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
+            ShowProductDetails(produkt);
+        }
     }
+
 
     private void ShowProductDetails(Produkt? product)
     {
@@ -129,8 +130,18 @@ public class CustomerMenu : MenuBase
         Console.WriteLine($"{"Léverantör:".PadRight(20)}{product.Leverantör?.Namn}");
         Console.WriteLine($"{"LagerAntal:".PadRight(20)}{product.LagerAntal}");
 
-        while (Console.KeyAvailable) Console.ReadKey(true);
-        while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
+        Console.WriteLine("\nEnter = Lägg i varukorg | Escape = Tillbaka");
 
+        while (Console.KeyAvailable) Console.ReadKey(true);
+        while (true)
+        {
+            var key = Console.ReadKey(true).Key;
+            if (key == ConsoleKey.Escape) break;
+            if (key == ConsoleKey.Enter)
+            {
+                _varukorgService.AddProduct(product.Id, 1);
+                Console.WriteLine("Produkt tillagd i varukorgen!");
+            }
+        }
     }
 }

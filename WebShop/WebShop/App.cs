@@ -37,6 +37,10 @@ public class App
         var varukorgService = new VarukorgService();
 
         var menu = new MainMenu(produktService, kategoriService, leverantörService, varukorgService);
+        var kundRepo = new KundRepository(db);
+        var kundService = new KundService(kundRepo);
+
+        var menu = new MainMenu(produktService, kategoriService, leverantörService, kundService);
         menu.ShowMenu("Välj meny");
 
     }

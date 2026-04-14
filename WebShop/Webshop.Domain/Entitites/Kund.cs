@@ -7,7 +7,7 @@ public class Kund
     public string Adress { get; set; } = null!;
     public string Stad { get; set; } = null!;
     public int Postnummer { get; set; }
-    public int MobilNummer { get; set; }
+    public string MobilNummer { get; set; } = null!;
     public string Epost { get; set; } = null!;
     public List<Order> Ordrar { get; set; } = new List<Order>();
 }

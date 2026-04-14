@@ -12,6 +12,7 @@ public class MainMenu : MenuBase
     private readonly IKategoriService _kategoriService;
     private readonly ILeverantörService _leverantörService;
     private readonly IVarukorgService _varukorgService;
+    private readonly IKundService _kundService;
 
     private int _selectedProductIndex = 0;
 
@@ -23,11 +24,13 @@ public class MainMenu : MenuBase
         IKategoriService kategoriService,
         ILeverantörService leverantörService,
         IVarukorgService varukorgService)
+        IKundService kundService)
     {
         _productService = productService;
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
         _varukorgService = varukorgService;
+        _kundService = kundService;
 
         _options = new[]
         {
@@ -156,7 +159,9 @@ public class MainMenu : MenuBase
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);
-                var adminMenu = new AdminMenu(productHandler, categoryHandler);
+                var customerHandler = new AdminCustomerHandler(_kundService);
+                var leverantörHandler = new AdminLeverantörHandler(_leverantörService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler, leverantörHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

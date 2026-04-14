@@ -3,13 +3,9 @@
 public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
-
     protected bool _isProductFocused = false;
-
     protected virtual void LoadData() { }
-
     protected virtual void PopuleraProduker() { }
-
     protected virtual void MoveLeft() { }
     protected virtual void MoveRight() { }
     protected virtual void HandleProductEnter() { }
@@ -45,12 +41,9 @@ public abstract class MenuBase
         while (true)
         {
             Console.Clear();
-
-
             ShowWelcome();
-
             PopuleraProduker();
-
+            DrawContent();
             Console.WriteLine();
             Console.WriteLine();
 
@@ -143,4 +136,6 @@ public abstract class MenuBase
         }
     }
     protected abstract bool ExecuteChoice(int selectedIndex);
+
+    protected virtual void DrawContent() { }
 }

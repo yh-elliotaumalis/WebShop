@@ -1,6 +1,7 @@
 ﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Menus;
 using WebShop.Presentation.Validator;
 
 namespace HustlersAB.Admin.Menus;
@@ -8,8 +9,13 @@ namespace HustlersAB.Admin.Menus;
 public class CustomerMenu : MenuBase
 {
     private CustomerProductHandler _handler;
-    public CustomerMenu(IProduktService productService)
+    private IVarukorgService _varukorgService;
+    private IProduktService _produktService;
+
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService)
     {
+        _produktService = productService;
+        _varukorgService = varukorgService;
         _handler = new CustomerProductHandler(productService);
         _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
@@ -26,9 +32,7 @@ public class CustomerMenu : MenuBase
                 return false;
 
             case 2:
-                Console.Clear();
-                Console.WriteLine("Varukorgen kommer senare...");
-                Console.ReadKey(true);
+                new CartMenu(_produktService, _varukorgService).ShowMenu("Varukorg");
                 return false;
 
             case 3:

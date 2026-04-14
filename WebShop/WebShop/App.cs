@@ -1,5 +1,4 @@
-﻿using HustlersAB.Admin.Menus;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Webshop.Application.Services;
@@ -35,7 +34,9 @@ public class App
         var leverantörRepo = new LeverantörRepository(db);
         var leverantörService = new LeverantörService(leverantörRepo);
 
-        var menu = new MainMenu(produktService, kategoriService, leverantörService);
+        var varukorgService = new VarukorgService();
+
+        var menu = new MainMenu(produktService, kategoriService, leverantörService, varukorgService);
         menu.ShowMenu("Välj meny");
 
     }

@@ -11,6 +11,7 @@ public class MainMenu : MenuBase
     private readonly IProduktService _productService;
     private readonly IKategoriService _kategoriService;
     private readonly ILeverantörService _leverantörService;
+    private readonly IVarukorgService _varukorgService;
 
     private int _selectedProductIndex = 0;
 
@@ -20,11 +21,13 @@ public class MainMenu : MenuBase
     public MainMenu(
         IProduktService productService,
         IKategoriService kategoriService,
-        ILeverantörService leverantörService)
+        ILeverantörService leverantörService,
+        IVarukorgService varukorgService)
     {
         _productService = productService;
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
+        _varukorgService = varukorgService;
 
         _options = new[]
         {
@@ -147,7 +150,7 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService).ShowMenu("Kund Meny");
                 return false;
 
             case 1:

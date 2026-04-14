@@ -28,6 +28,7 @@ public class CartMenu : MenuBase
             case 1:
                 return false;
             case 2:
+                _varuorgService.Clear();
                 return false;
             case 3:
                 return true;
@@ -39,13 +40,27 @@ public class CartMenu : MenuBase
     {
         var items = _varuorgService.GetItems();
         var produkter = new List<Produkt>();
+        Console.WriteLine("==========================");
         foreach (var item in items)
         {
             var produkt = _handler.GetProductAsync(item.Key).GetAwaiter().GetResult()!;
-            Console.WriteLine($"Produkt namn: {produkt.Namn}\t Produkt antal: {item.Value}\t Produkt pris: {produkt.Pris}");
+            Console.WriteLine($"Produkt namn: {produkt.Namn.PadRight(10)} Produkt antal: {item.Value}st Produkt pris: {produkt.Pris}SEK");
             produkter.Add(produkt);
         }
         var totalPris = _varuorgService.CalculateTotal(produkter);
-        Console.WriteLine($"Total pris: {totalPris}");
+        var moms = totalPris * 0.25m;
+        var utanMoms = totalPris - moms;
+        Console.WriteLine("------------------------");
+        Console.WriteLine($"Exkl. moms:   {utanMoms}SEK");
+        Console.WriteLine($"Moms (25%):   {moms}SEK");
+        Console.WriteLine("------------------------");
+        Console.WriteLine($"Totalt:       {totalPris}SEK");
+        Console.WriteLine("==========================");
+    }
+
+    protected override void DrawContent()
+    {
+        Console.Clear();
+        ShowCart();
     }
 }

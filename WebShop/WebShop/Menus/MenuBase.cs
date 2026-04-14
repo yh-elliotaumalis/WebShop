@@ -39,7 +39,7 @@ public abstract class MenuBase
     {
         int selectedIndex = 0;
 
-       
+
         LoadData();
 
         while (true)

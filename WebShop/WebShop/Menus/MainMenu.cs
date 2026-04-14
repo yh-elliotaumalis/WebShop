@@ -1,6 +1,5 @@
 ﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
-using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
 using WebShop.Presentation.UI;
@@ -15,7 +14,7 @@ public class MainMenu : MenuBase
 
     private int _selectedProductIndex = 0;
 
-    
+
     private List<Produkt> _products = new();
 
     public MainMenu(
@@ -148,9 +147,7 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                Console.Clear();
-                Console.WriteLine("Kund meny...");
-                Console.ReadKey();
+                new CustomerMenu(_productService).ShowMenu("Kund Meny");
                 return false;
 
             case 1:

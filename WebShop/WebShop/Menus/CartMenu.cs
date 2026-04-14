@@ -24,9 +24,10 @@ public class CartMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
+                UpdateQuantity();
                 return false;
             case 1:
-
+                RemoveProduct();
                 return false;
             case 2:
                 _varukorgService.Clear();
@@ -63,7 +64,48 @@ public class CartMenu : MenuBase
     {
         var items = _varukorgService.GetItems();
         var produkter = new List<Produkt>();
+        foreach (var item in items)
+        {
+            var produkt = _handler.GetProductAsync(item.Key).GetAwaiter().GetResult()!;
+            produkter.Add(produkt);
+        }
+        var vald = NavigateList(produkter, (list, i) =>
+        {
+            for (int j = 0; j < list.Count; j++)
+            {
+                var markering = j == i ? "> " : "  ";
+                Console.WriteLine($"{markering}{list[j].Namn.PadRight(20)} {list[j].Pris}SEK");
+            }
+        });
+        if (vald == null) return;
+        _varukorgService.RemoveProduct(vald.Id);
     }
+
+    private void UpdateQuantity()
+    {
+        var items = _varukorgService.GetItems();
+        var produkter = new List<Produkt>();
+        foreach (var item in items)
+        {
+            var produkt = _handler.GetProductAsync(item.Key).GetAwaiter().GetResult()!;
+            produkter.Add(produkt);
+        }
+        var vald = NavigateList(produkter, (list, i) =>
+        {
+            for (int j = 0; j < list.Count; j++)
+            {
+                var markering = j == i ? "> " : "  ";
+                Console.WriteLine($"{markering}{list[j].Namn.PadRight(20)} {list[j].Pris}SEK");
+            }
+        });
+        if (vald == null) return;
+
+        Console.Write("Nytt antal: ");
+        var input = Console.ReadLine();
+        if (int.TryParse(input, out int nyttAntal) && nyttAntal > 0)
+            _varukorgService.UpdateQuantity(vald.Id, nyttAntal);
+    }
+
 
     protected override void DrawContent()
     {

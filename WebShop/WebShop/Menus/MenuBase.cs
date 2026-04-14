@@ -4,9 +4,8 @@ public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
 
-    protected bool _isProductFocused = true;
+    protected bool _isProductFocused = false;
 
-   
     protected virtual void LoadData() { }
 
     protected virtual void PopuleraProduker() { }

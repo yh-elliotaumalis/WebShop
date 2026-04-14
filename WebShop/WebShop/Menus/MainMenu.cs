@@ -1,12 +1,17 @@
-﻿using Webshop.Application.Interfaces;
+﻿using HustlersAB.Admin.Menus;
+using Webshop.Application.Interfaces;
 using Webshop.Application.Services;
+using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.UI;
 
 namespace Webshop.Presentation.Menus;
 
 public class MainMenu : MenuBase
 {
     private readonly IProduktService _productService;
+    private readonly IKategoriService _kategoriService;
+    private readonly ILeverantörService _leverantörService;
 
     private int _selectedProductIndex = 0;
 
@@ -15,10 +20,12 @@ public class MainMenu : MenuBase
 
     public MainMenu(
         IProduktService productService,
-        Application.Services.KategoriService kategoriService,
-        Application.Services.LeverantörService leverantörService)
+        IKategoriService kategoriService,
+        ILeverantörService leverantörService)
     {
         _productService = productService;
+        _kategoriService = kategoriService;
+        _leverantörService = leverantörService;
 
         _options = new[]
         {

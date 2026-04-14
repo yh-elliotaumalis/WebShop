@@ -26,6 +26,7 @@ public class KundConfiguration : IEntityTypeConfiguration<Kund>
             .IsRequired();
 
         builder.Property(x => x.MobilNummer)
+            .HasMaxLength(20)
             .IsRequired();
 
         builder.Property(x => x.Epost)

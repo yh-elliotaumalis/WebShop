@@ -7,11 +7,13 @@ public class AdminMenu : MenuBase
 {
     private readonly AdminProductHandler _productHandler;
     private readonly AdminCategoryHandler _categoryHandler;
+    private readonly AdminCustomerHandler _customerHandler;
 
-    public AdminMenu(AdminProductHandler productHandler, AdminCategoryHandler categoryHandler)
+    public AdminMenu(AdminProductHandler productHandler, AdminCategoryHandler categoryHandler, AdminCustomerHandler customerHandler)
     {
         _productHandler = productHandler;
         _categoryHandler = categoryHandler;
+        _customerHandler = customerHandler;
 
         _options = new[]
         {
@@ -30,19 +32,19 @@ public class AdminMenu : MenuBase
             case 0:
                 Console.Clear();
                 var productMenu = new AdminProductMenu(_productHandler);
-                productMenu.ShowMenu("ProductMenu");
+                productMenu.ShowMenu("Administrera produkter");
                 return false;
 
             case 1:
                 Console.Clear();
                 var categoryMenu = new AdminCategoryMenu(_categoryHandler);
-                categoryMenu.ShowMenu("CategoryMenu");
+                categoryMenu.ShowMenu("Administrera kategorier");
                 return false;
 
             case 2:
                 Console.Clear();
-                Console.WriteLine("Kundadministration kommer senare...");
-                Console.ReadKey(true);
+                var customerMenu = new AdminCustomerMenu(_customerHandler);
+                customerMenu.ShowMenu("Administrera kunder");
                 return false;
 
             case 3:

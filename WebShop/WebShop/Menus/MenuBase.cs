@@ -4,12 +4,23 @@ public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
 
+    protected bool _isProductFocused = true;
+
+   
+    protected virtual void LoadData() { }
+
+    protected virtual void PopuleraProduker() { }
+
+    protected virtual void MoveLeft() { }
+    protected virtual void MoveRight() { }
+    protected virtual void HandleProductEnter() { }
+
     protected void PrintMenu(int selectedIndex, string title)
     {
         WriteCentered($"=== {title} ===");
         Console.WriteLine();
 
-        int maxLength = _options.Max(o => o.Length);
+        int maxLength = _options.Length > 0 ? _options.Max(o => o.Length) : 0;
 
         for (int i = 0; i < _options.Length; i++)
         {
@@ -29,12 +40,17 @@ public abstract class MenuBase
     {
         int selectedIndex = 0;
 
+       
+        LoadData();
+
         while (true)
         {
             Console.Clear();
 
 
             ShowWelcome();
+
+            PopuleraProduker();
 
             Console.WriteLine();
             Console.WriteLine();
@@ -45,33 +61,58 @@ public abstract class MenuBase
 
             switch (key)
             {
+                case ConsoleKey.Tab:
+                    _isProductFocused = !_isProductFocused;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (_isProductFocused)
+                        MoveLeft();
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    if (_isProductFocused)
+                        MoveRight();
+                    break;
+
                 case ConsoleKey.UpArrow:
-                    selectedIndex = (selectedIndex - 1 + _options.Length) % _options.Length;
+                    if (!_isProductFocused && _options.Length > 0)
+                        selectedIndex = (selectedIndex - 1 + _options.Length) % _options.Length;
                     break;
 
                 case ConsoleKey.DownArrow:
-                    selectedIndex = (selectedIndex + 1) % _options.Length;
+                    if (!_isProductFocused && _options.Length > 0)
+                        selectedIndex = (selectedIndex + 1) % _options.Length;
                     break;
 
                 case ConsoleKey.Enter:
-                    if (ExecuteChoice(selectedIndex))
-                        return;
+                    if (_isProductFocused)
+                    {
+                        HandleProductEnter();
+                    }
+                    else
+                    {
+                        if (ExecuteChoice(selectedIndex))
+                            return;
+                    }
                     break;
             }
         }
     }
 
-    private void ShowWelcome()
+    protected void ShowWelcome()
     {
         WriteCentered("Välkommen till KläderShoppen!");
         WriteCentered("********************************");
         Console.WriteLine();
 
         WriteCentered("Här kan du bläddra bland produkter och handla enkelt.");
-        WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.");
+        WriteCentered("Använd piltangenterna för att navigera och Enter för att välja.\n");
+
+        WriteCentered("TAB = switch focus | Left/Right = products | Up/Down = menu | Enter = select\n");
     }
 
-    private void WriteCentered(string text)
+    protected void WriteCentered(string text)
     {
         int windowWidth = Console.WindowWidth;
         int textLength = text.Length;

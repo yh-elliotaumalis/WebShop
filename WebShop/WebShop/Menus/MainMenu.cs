@@ -35,7 +35,7 @@ public class MainMenu : MenuBase
             .GetAwaiter()
             .GetResult();
 
-        _options = new[] { "Kund", "Admin", "Avsluta" };
+        
         _options = new[]
         {
             "Kund",
@@ -86,7 +86,7 @@ public class MainMenu : MenuBase
             Console.Write("│ " + p.Namn.PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 2);
-            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr".PadRight(boxWidth - 4) + " │");
+            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr / Pris USD: {(p.Pris * _rate):0.00}".PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 3);
             Console.Write("│ " + $"Färg: {p.Färg}".PadRight(boxWidth - 4) + " │");

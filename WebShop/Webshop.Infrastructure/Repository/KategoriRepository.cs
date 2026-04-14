@@ -7,16 +7,19 @@ namespace Webshop.Infrastructure.Repositories;
 
 public class KategoriRepository(WebshopDbContext db) : IKategoriRepository
 {
+    private IQueryable<Kategori> GetCategoriesWithIncludes()
+        => db.Kategorier
+            .Include(k => k.Produkter);
     public async Task<IEnumerable<Kategori>> GetAllAsync()
-        => await db.Kategorier.ToListAsync();
+        => await GetCategoriesWithIncludes()
+            .ToListAsync();
 
     public async Task<Kategori?> GetByIdAsync(Guid id)
-        => await db.Kategorier
-            .Include(k => k.Produkter)
+        => await GetCategoriesWithIncludes()
             .FirstOrDefaultAsync(k => k.Id == id);
 
     public async Task<Kategori?> GetMostPopularCategoryAsync()
-     => await db.Kategorier
+     => await GetCategoriesWithIncludes()
          .OrderByDescending(k => k.Produkter
              .Sum(p => p.ProduktOrdrar != null
                  ? p.ProduktOrdrar.Sum(po => po.Antal)

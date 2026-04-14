@@ -157,7 +157,8 @@ public class MainMenu : MenuBase
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);
                 var customerHandler = new AdminCustomerHandler(_kundService);
-                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler);
+                var leverantörHandler = new AdminLeverantörHandler(_leverantörService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler, leverantörHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

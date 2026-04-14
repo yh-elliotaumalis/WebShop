@@ -25,9 +25,14 @@ public abstract class MenuBase
         for (int i = 0; i < _options.Length; i++)
         {
             string prefix = (i == selectedIndex) ? "> " : "  ";
+
+
             string paddedText = _options[i].PadRight(maxLength);
 
-            WriteCentered($"{prefix}{paddedText}");
+
+            string fullText = prefix + paddedText;
+
+            WriteCentered(fullText);
         }
     }
 
@@ -41,6 +46,7 @@ public abstract class MenuBase
         while (true)
         {
             Console.Clear();
+
 
             ShowWelcome();
 
@@ -114,6 +120,28 @@ public abstract class MenuBase
 
         Console.WriteLine(new string(' ', Math.Max(0, spaces)) + text);
     }
+    public static T? NavigateList<T>(List<T> items, Action<List<T>, int> draw) where T : class
+    {
+        int selectedIndex = 0;
+        while (true)
+        {
+            Console.Clear();
+            draw(items, selectedIndex);
+            switch (Console.ReadKey(true).Key)
+            {
 
+                case ConsoleKey.UpArrow:
+                    selectedIndex = Math.Max(0, selectedIndex - 1);
+                    break;
+                case ConsoleKey.DownArrow:
+                    selectedIndex = Math.Min(items.Count - 1, selectedIndex + 1);
+                    break;
+                case ConsoleKey.Enter:
+                    return items[selectedIndex];
+                case ConsoleKey.Escape:
+                    return null;
+            }
+        }
+    }
     protected abstract bool ExecuteChoice(int selectedIndex);
 }

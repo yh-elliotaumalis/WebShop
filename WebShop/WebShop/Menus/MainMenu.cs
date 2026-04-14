@@ -1,7 +1,6 @@
-﻿using HustlersAB.Admin.Menus;
-using Webshop.Application.Interfaces;
-using Webshop.Domain.Entitites;
-using WebShop.Presentation.UI;
+﻿using Webshop.Application.Interfaces;
+using Webshop.Application.Services;
+using WebShop.Presentation.MenuHandlers;
 
 namespace Webshop.Presentation.Menus;
 
@@ -148,9 +147,10 @@ public class MainMenu : MenuBase
                 return false;
 
             case 1:
-                Console.Clear();
-                Console.WriteLine("Admin meny...");
-                Console.ReadKey();
+                var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
+                var categoryHandler = new AdminCategoryHandler(_kategoriService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler);
+                adminMenu.ShowMenu("Admin Meny");
                 return false;
 
             case 2:

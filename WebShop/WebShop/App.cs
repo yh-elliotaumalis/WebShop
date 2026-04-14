@@ -35,7 +35,10 @@ public class App
         var leverantörRepo = new LeverantörRepository(db);
         var leverantörService = new LeverantörService(leverantörRepo);
 
-        var menu = new MainMenu(produktService, kategoriService, leverantörService);
+        var kundRepo = new KundRepository(db);
+        var kundService = new KundService(kundRepo);
+
+        var menu = new MainMenu(produktService, kategoriService, leverantörService, kundService);
         menu.ShowMenu("Välj meny");
 
     }

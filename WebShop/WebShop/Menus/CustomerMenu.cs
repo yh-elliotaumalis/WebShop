@@ -102,7 +102,7 @@ public class CustomerMenu : MenuBase
                 var converted = product.Pris * _rate;
 
                 Console.WriteLine(
-                    $"{markering}[{num + 1}] {product.Namn.PadRight(20)} {converted:0.00} USD"
+                    $"{markering}[{num + 1}] {product.Namn.PadRight(20)} {product.Pris:0.00} kr {converted:0.00} USD"
                 );
 
                 num++;
@@ -133,7 +133,7 @@ public class CustomerMenu : MenuBase
 
         Console.WriteLine($"{"Namn:".PadRight(20)}{product.Namn}");
         Console.WriteLine($"{"Beskrivning:".PadRight(20)}{product.Beskrivning}");
-        Console.WriteLine($"{"Pris:".PadRight(20)}{converted:0.00} USD");
+        Console.WriteLine($"{"Pris:".PadRight(20)}{product.Pris:0:00} kr {converted:0.00} USD");
         Console.WriteLine($"{"Kategori:".PadRight(20)}{product.Kategori?.Namn}");
         Console.WriteLine($"{"Léverantör:".PadRight(20)}{product.Leverantör?.Namn}");
         Console.WriteLine($"{"LagerAntal:".PadRight(20)}{product.LagerAntal}");

@@ -87,6 +87,9 @@ public class AdminCustomerHandler
                 Console.WriteLine($"Order ID: {order.Id}");
                 Console.WriteLine($"Datum: {order.OrderDatum}");
                 Console.WriteLine($"Totalpris: {order.TotalPris} kr");
+                Console.WriteLine($"Status: {(order.ÄrBetald ? "Betald" : "Obetald")}");
+                Console.WriteLine($"Betalsätt: {order.Betalsätt}");
+                Console.WriteLine($"Fraktombud: {order.FraktOmbud.Namn}");
                 Console.WriteLine("Produkter:");
                 order.ProduktOrdrar.ForEach(productOrder =>
                 {

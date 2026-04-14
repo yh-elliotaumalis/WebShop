@@ -1,5 +1,6 @@
 ﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
+using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
 using WebShop.Presentation.UI;
@@ -13,6 +14,8 @@ public class MainMenu : MenuBase
     private readonly ILeverantörService _leverantörService;
 
     private int _selectedProductIndex = 0;
+    private readonly CurrencyService _currencyService = new();
+    private decimal _rate;
 
 
     private List<Produkt> _products = new();

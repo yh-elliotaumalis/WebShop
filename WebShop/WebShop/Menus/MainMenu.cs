@@ -160,7 +160,7 @@ public class MainMenu : MenuBase
     protected override void HandleProductEnter()
     {
         var selectedProduct = _products[_selectedProductIndex];
-
+        _varukorgService.AddProduct(selectedProduct.Id, 1);
         Console.SetCursorPosition(10, Console.WindowHeight - 2);
         Console.ForegroundColor = Theme.Message;
         Console.Write($"{selectedProduct.Namn} Lägg i kundvagn!");

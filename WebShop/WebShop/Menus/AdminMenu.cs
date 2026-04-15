@@ -9,13 +9,15 @@ public class AdminMenu : MenuBase
     private readonly AdminCategoryHandler _categoryHandler;
     private readonly AdminCustomerHandler _customerHandler;
     private readonly AdminLeverantörHandler _leverantörHandler;
+    private readonly AdminFraktOmbudHandler _fraktOmbudHandler;
 
-    public AdminMenu(AdminProductHandler productHandler, AdminCategoryHandler categoryHandler, AdminCustomerHandler customerHandler, AdminLeverantörHandler leverantörHandler)
+    public AdminMenu(AdminProductHandler productHandler, AdminCategoryHandler categoryHandler, AdminCustomerHandler customerHandler, AdminLeverantörHandler leverantörHandler, AdminFraktOmbudHandler fraktOmbudHandler)
     {
         _productHandler = productHandler;
         _categoryHandler = categoryHandler;
         _customerHandler = customerHandler;
         _leverantörHandler = leverantörHandler;
+        _fraktOmbudHandler = fraktOmbudHandler;
 
         _options = new[]
         {
@@ -23,6 +25,7 @@ public class AdminMenu : MenuBase
             "Administrera kategorier",
             "Administrera kunder",
             "Administrera leverantörer",
+            "Administrera fraktombud",
             "Se statistik",
             "Tillbaka"
         };
@@ -58,11 +61,17 @@ public class AdminMenu : MenuBase
 
             case 4:
                 Console.Clear();
+                var fraktOmbudMenu = new AdminFraktOmbudMenu(_fraktOmbudHandler);
+                fraktOmbudMenu.ShowMenu("Administrera fraktombud");
+                return false;
+
+            case 5:
+                Console.Clear();
                 Console.WriteLine("Statistik kommer senare...");
                 Console.ReadKey(true);
                 return false;
 
-            case 5:
+            case 6:
                 return true;
         }
 

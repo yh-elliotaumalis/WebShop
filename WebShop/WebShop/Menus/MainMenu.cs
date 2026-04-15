@@ -9,13 +9,13 @@ namespace Webshop.Presentation.Menus;
 
 public class MainMenu : MenuBase
 {
-    private readonly IFraktOmbudRepository _fraktOmbudRepository;
     private readonly IProduktService _productService;
     private readonly IKategoriService _kategoriService;
     private readonly ILeverantörService _leverantörService;
     private readonly IVarukorgService _varukorgService;
     private readonly IKundService _kundService;
     private readonly IOrderService _orderService;
+    private readonly IFraktOmbudService _fraktOmbudService;
 
     private int _selectedProductIndex = 0;
     private readonly CurrencyService _currencyService = new();
@@ -29,18 +29,18 @@ public class MainMenu : MenuBase
         IKategoriService kategoriService,
         ILeverantörService leverantörService,
         IVarukorgService varukorgService,
-       IKundService kundService,
-       IOrderService orderService,
-    IFraktOmbudRepository fraktOmbudRepository)
+        IKundService kundService,
+        IOrderService orderService,
+        IFraktOmbudService fraktOmbudService)
     {
         _productService = productService;
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
         _varukorgService = varukorgService;
         _kundService = kundService;
-        _fraktOmbudRepository = fraktOmbudRepository;
         _orderService = orderService;
 
+        _fraktOmbudService = fraktOmbudService;
 
         _rate = _currencyService
             .GetRateAsync("SEK", "USD")
@@ -169,14 +169,15 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudRepository, _rate, _orderService).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudService, _rate, _orderService).ShowMenu("Kund Meny");
                 return false;
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);
                 var customerHandler = new AdminCustomerHandler(_kundService);
                 var leverantörHandler = new AdminLeverantörHandler(_leverantörService);
-                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler, leverantörHandler);
+                var fraktOmbudHandler = new AdminFraktOmbudHandler(_fraktOmbudService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler, leverantörHandler, fraktOmbudHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

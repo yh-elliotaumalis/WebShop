@@ -12,15 +12,15 @@ public class CustomerMenu : MenuBase
     private IVarukorgService _varukorgService;
     private IProduktService _produktService;
     private readonly IKundService _kundService;
-    private readonly IFraktOmbudRepository _fraktOmbudRepository;
+    private readonly IFraktOmbudService _fraktOmbudService;
     private readonly decimal _rate;
     private readonly IOrderService _orderService;
-    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudRepository fraktOmbudRepository, decimal rate, IOrderService orderServie)
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudService fraktOmbudService, decimal rate, IOrderService orderServie)
     {
         _produktService = productService;
         _varukorgService = varukorgService;
         _kundService = kundService;
-        _fraktOmbudRepository = fraktOmbudRepository;
+        _fraktOmbudService = fraktOmbudService;
         _handler = new CustomerProductHandler(productService);
         _rate = rate;
         _orderService = orderServie;
@@ -38,7 +38,7 @@ public class CustomerMenu : MenuBase
                 return false;
 
             case 2:
-                new CartMenu(_produktService, _varukorgService, _fraktOmbudRepository, _kundService, _orderService).ShowMenu("Varukorg");
+                new CartMenu(_produktService, _varukorgService, _fraktOmbudService, _kundService, _orderService).ShowMenu("Varukorg");
                 return false;
 
             case 3:

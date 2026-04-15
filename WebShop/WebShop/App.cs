@@ -39,10 +39,11 @@ public class App
         var kundRepo = new KundRepository(db);
         var kundService = new KundService(kundRepo);
         var fraktOmbudRepo = new FraktOmbudRepository(db);
+        var fraktOmbudService = new FraktOmbudService(fraktOmbudRepo);
         var orderRepo = new OrderRepository(db);
         var orderService = new OrderService(orderRepo);
 
-        var menu = new MainMenu(produktService, kategoriService, leverantörService, varukorgService, kundService, orderService, fraktOmbudRepo);
+        var menu = new MainMenu(produktService, kategoriService, leverantörService, varukorgService, kundService, orderService, fraktOmbudService);
         menu.ShowMenu("Välj meny");
     }
 }

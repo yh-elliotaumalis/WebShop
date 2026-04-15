@@ -2,7 +2,7 @@
 
 namespace Webshop.Application.Interfaces;
 
-public interface IFraktOmbudRepository
+public interface IFraktOmbudService
 {
     Task<IEnumerable<FraktOmbud>> GetAllAsync();
     Task<FraktOmbud?> GetByIdAsync(Guid id);

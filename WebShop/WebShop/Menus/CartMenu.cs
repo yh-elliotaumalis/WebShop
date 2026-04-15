@@ -11,16 +11,16 @@ public class CartMenu : MenuBase
 {
     private readonly IVarukorgService _varukorgService;
     private readonly IProduktService _produktService;
-    private readonly IFraktOmbudRepository _fraktOmbudRepository;
+    private readonly IFraktOmbudService _fraktOmbudService;
     private readonly IKundService _kundService;
     private readonly CustomerProductHandler _handler;
     private readonly IOrderService _orderService;
 
-    public CartMenu(IProduktService produktService, IVarukorgService varukorgService, IFraktOmbudRepository fraktOmbudRepository, IKundService kundService, IOrderService orderService)
+    public CartMenu(IProduktService produktService, IVarukorgService varukorgService, IFraktOmbudService fraktOmbudService, IKundService kundService, IOrderService orderService)
     {
         _produktService = produktService;
         _varukorgService = varukorgService;
-        _fraktOmbudRepository = fraktOmbudRepository;
+        _fraktOmbudService = fraktOmbudService;
         _kundService = kundService;
         _options = new[] { "Ändra antal", "Tabort produkt", "Rensa varukorg", "Betala", "Tillbaka" };
         _handler = new CustomerProductHandler(produktService);
@@ -243,7 +243,7 @@ public class CartMenu : MenuBase
     }
     private FraktOmbud GetShippingMetod()
     {
-        var alternativ = _fraktOmbudRepository.GetAllAsync().GetAwaiter().GetResult().ToList();
+        var alternativ = _fraktOmbudService.GetAllAsync().GetAwaiter().GetResult().ToList();
 
         var vald = NavigateList(alternativ, (list, i) =>
         {

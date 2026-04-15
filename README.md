@@ -25,7 +25,7 @@ Kund
 - Som kund vill jag kunna välja en produkt för att få mer information för att få bättre koll på vad man ska köpa
 	- Namn, beskrivning, pris, färg, storlek? och kategori
 - Som kund vill jag kunna lägga till produkter i varukorgen så att jag kan köpa produkten
-	- Lägg till - knapp tryck (H/L knapparna?)
+	- Lägg till - knapp tryck (Enter)
 	- Produkter läggs till i varukorg
 	
 Varukorg
@@ -39,18 +39,16 @@ Varukorg
 	- Antal kan ökas/minskas
 	- Totalpriset ändras
 - Som kund vill jag kunna ta bort produkter ur varukorg så att justera min beställning
-	- Kunna ta bort varor från varukorg - knapp tryck (T/Delete)
+	- Kunna ta bort varor från varukorg - genom meny valet radera produkt.
 	- Totalpris ändras
 - Som kund vill jag ha en köp knapp för att gå vidare mot betalning
-	- visuell knapp med knapp tryck (K/B)
+	- visuell knapp med knapp trycka enter på produkten.
 	- Skicka vidare till betalnings menyn
 
 Frakt
 - Som kund vill jag kunna välja mellan olika frakt alternativ så att jag kan välja pris och leveranstid som passar mig bäst
 	- Minst 2 alternativ
 	- Pris visas per alternativ - 40kr, 90kr
-	- Random mellan - 0,10
-	- Fri frakt över 500kr
 - Som kund måste jag ange namn och adress så att varorna kan levereras
 	-  Namn och adress ska fyllas i
 	-  Validering mot att det inte får vara tomma strängar
@@ -61,7 +59,7 @@ Betalning
 - Som kund vill jag se totalpris inklusive frakt samt moms
 	- Räkna med moms och frakt i totalpris
 - Som kund vill jag kunna välja betalningsmetod
-	- 2 betalningsalternativ
+	- 3 betalningsalternativ
 - Efter genomförd betalning skall systemet tömma varukorgen så att det blir lätt för nästa kund
 	- Varukorgen töms efter betalning
 - Betalnings bekräftelse att köpet gått igenom så att kunden vet att det är färdigt

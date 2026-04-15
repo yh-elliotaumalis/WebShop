@@ -1,7 +1,5 @@
 ﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
-using Webshop.Domain.Enums;
-using Webshop.Domain.Interfaces;
 
 namespace Webshop.Application.Services;
 

@@ -21,7 +21,7 @@ public class FraktOmbudValidator
 
     public static bool ValidateFraktOmbudPrice(decimal price, out string? error)
     {
-        if (price < 0)
+        if (price <= 0)
         {
             error = "Priset måste vara större än noll.";
             return false;

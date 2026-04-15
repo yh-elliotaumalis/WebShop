@@ -6,7 +6,7 @@ public abstract class MenuBase
 
     protected bool _isProductFocused = false;
 
-    protected virtual void LoadData() { }
+    protected virtual void GetThreeProduckter() { }
 
     protected virtual void PopuleraProduker() { }
 
@@ -39,8 +39,8 @@ public abstract class MenuBase
     {
         int selectedIndex = 0;
 
-       
-        LoadData();
+
+        GetThreeProduckter();
 
         while (true)
         {

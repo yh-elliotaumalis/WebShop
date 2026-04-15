@@ -48,7 +48,7 @@ public class MainMenu : MenuBase
     }
 
 
-    protected override void LoadData()
+    protected override void GetThreeProduckter()
     {
         _products = _productService
             .GetBestSellersAsync(3)
@@ -105,7 +105,7 @@ public class MainMenu : MenuBase
 
             Console.SetCursorPosition(x, y + 7);
 
-            string button = "[ Add to cart ]";
+            string button = "[ Lägg i kundvagn ]";
             int padding = (boxWidth - 2 - button.Length) / 2;
 
             string buttonLine = "│"
@@ -149,7 +149,7 @@ public class MainMenu : MenuBase
 
         Console.SetCursorPosition(10, Console.WindowHeight - 2);
         Console.ForegroundColor = Theme.Message;
-        Console.Write($"{selectedProduct.Namn} added to cart!");
+        Console.Write($"{selectedProduct.Namn} Lägg i kundvagn!");
         Console.ResetColor();
 
         Console.ReadKey();

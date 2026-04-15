@@ -109,4 +109,9 @@ public class AdminCategoryHandler
         Console.WriteLine($"Kategori '{category.Namn}' har tagits bort.");
         Console.ReadKey(true);
     }
+    // Hämtar mest populära kategorier från service
+    public async Task<Kategori?> GetPopularCategoriesAsync()
+    {
+        return await _kategoriService.GetMostPopularCategoryAsync();
+    }
 }

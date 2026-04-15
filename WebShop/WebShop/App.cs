@@ -23,6 +23,7 @@ public class App
         var servicesProvider = services.BuildServiceProvider();
 
         using var db = servicesProvider.GetRequiredService<WebshopDbContext>();
+        db.Database.Migrate();
         WebShopSeeder.Seed(db);
 
         var produktRepo = new ProduktRepository(db);

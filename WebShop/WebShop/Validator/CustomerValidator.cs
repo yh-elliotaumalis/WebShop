@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace WebShop.Presentation.Validator;
 
@@ -20,10 +17,6 @@ public class CustomerValidator
             return false;
         }
 
-    public static bool ValidateCustomerAddress(string address, out string? error)
-    {
-        if (string.IsNullOrWhiteSpace(address)) { error = "Adressen får inte vara tom."; return false; }
-        if (address.Length < 3) { error = "Adressen måste vara minst 3 tecken lång."; return false; }
         error = null;
         return true;
     }
@@ -50,11 +43,6 @@ public class CustomerValidator
             return false;
         }
 
-    public static bool ValidateCustomerEmail(string email, out string? error)
-    {
-        if (string.IsNullOrWhiteSpace(email)) { error = "E-postadressen får inte vara tom."; return false; }
-        var regex = new Regex("^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$");
-        if (!regex.IsMatch(email)) { error = "E-postadressen är inte i ett giltigt format."; return false; }
         error = null;
         return true;
     }
@@ -64,6 +52,7 @@ public class CustomerValidator
         if (string.IsNullOrWhiteSpace(phone))
         {
             error = "Mobilnumret får inte vara tomt.";
+            return false;
         }
 
         if (phone.Length < 7)

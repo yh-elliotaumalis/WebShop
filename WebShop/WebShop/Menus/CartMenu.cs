@@ -127,15 +127,57 @@ public class CartMenu : MenuBase
         Console.Clear();
         Console.WriteLine("=== Kunduppgifter ===");
 
+        string namn;
+        do
+        {
+            Console.Write("Namn: ");
+            namn = Console.ReadLine() ?? "";
+        } while (!CustomerValidator.ValidateCustomerName(namn, out _));
+
+        string adress;
+        do
+        {
+            Console.Write("Adress: ");
+            adress = Console.ReadLine() ?? "";
+        } while (!CustomerValidator.ValidateCustomerAddress(adress, out _));
+
+        string stad;
+        do
+        {
+            Console.Write("Stad: ");
+            stad = Console.ReadLine() ?? "";
+        } while (!CustomerValidator.ValidateCustomerCity(stad, out _));
+
+        int postnummer;
+        do
+        {
+            Console.Write("Postnummer: ");
+            int.TryParse(Console.ReadLine(), out postnummer);
+        } while (!CustomerValidator.ValidateCustomerPostNummer(postnummer, out _));
+
+        string mobil;
+        do
+        {
+            Console.Write("Mobilnummer: ");
+            mobil = Console.ReadLine() ?? "";
+        } while (!CustomerValidator.ValidateCustomerPhone(mobil, out _));
+
+        string epost;
+        do
+        {
+            Console.Write("Epost: ");
+            epost = Console.ReadLine() ?? "";
+        } while (!CustomerValidator.ValidateCustomerEmail(epost, out _));
+
         return new Kund
         {
             Id = Guid.NewGuid(),
-            Namn = CustomerValidator.GetValidatedName(),
-            Adress = CustomerValidator.GetValidatedAddress(),
-            Stad = CustomerValidator.GetValidatedCity(),
-            Postnummer = CustomerValidator.GetValidatedPostNummer(),
-            MobilNummer = CustomerValidator.GetValidatedPhone(),
-            Epost = CustomerValidator.GetValidatedEmail()
+            Namn = namn,
+            Adress = adress,
+            Stad = stad,
+            Postnummer = postnummer,
+            MobilNummer = mobil,
+            Epost = epost
         };
     }
 
@@ -178,7 +220,7 @@ public class CartMenu : MenuBase
                 }
 
                 var alleKunder = _kundService.GetAllAsync().GetAwaiter().GetResult();
-                var kund = alleKunder.FirstOrDefault(k => k.MobilNummer == telefon);
+                var kund = alleKunder.FirstOrDefault(k => k.MobilNummer == telefon.ToString());
 
                 if (kund == null)
                 {

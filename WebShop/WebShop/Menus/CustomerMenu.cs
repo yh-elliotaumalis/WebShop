@@ -13,11 +13,8 @@ public class CustomerMenu : MenuBase
     private IProduktService _produktService;
     private readonly IKundService _kundService;
     private readonly IFraktOmbudRepository _fraktOmbudRepository;
-
-    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService)
-    private readonly decimal _rate; 
-
-    public CustomerMenu(IProduktService productService, decimal rate)
+    private readonly decimal _rate;
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudRepository fraktOmbudRepository, decimal rate)
     {
         _produktService = productService;
         _varukorgService = varukorgService;
@@ -25,11 +22,8 @@ public class CustomerMenu : MenuBase
         _fraktOmbudRepository = fraktOmbudRepository;
         _handler = new CustomerProductHandler(productService);
         _rate = rate;
-
-        _options = new[] { "Handla produkter", "Varukorgen", "Tillbaka" };
         _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
-
     protected override bool ExecuteChoice(int selectedIndex)
     {
         switch (selectedIndex)
@@ -107,7 +101,7 @@ public class CustomerMenu : MenuBase
             {
                 var markering = num == selectedIndex ? "> " : "  ";
 
-               
+
                 var converted = product.Pris * _rate;
 
                 Console.WriteLine(

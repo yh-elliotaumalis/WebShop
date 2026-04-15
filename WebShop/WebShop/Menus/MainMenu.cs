@@ -35,14 +35,16 @@ public class MainMenu : MenuBase
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
         _varukorgService = varukorgService;
+        _kundService = kundService;
+        _fraktOmbudRepository = fraktOmbudRepository;
 
-       
+
         _rate = _currencyService
             .GetRateAsync("SEK", "USD")
             .GetAwaiter()
             .GetResult();
 
-        
+
         _options = new[]
         {
             "Kund",
@@ -164,9 +166,8 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService, _varukorgService).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudRepository, _rate).ShowMenu("Kund Meny");
                 return false;
-
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);

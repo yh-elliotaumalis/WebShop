@@ -160,7 +160,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt produktnamn. Det måste vara minst 3 tecken långt.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Namn = newName;
                 break;
@@ -170,7 +170,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig beskrivning. Den måste vara minst 10 tecken lång.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Beskrivning = newDescription;
                 break;
@@ -180,7 +180,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt pris. Det måste vara ett positivt tal.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Pris = newPrice;
                 break;
@@ -190,7 +190,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt lagerantal. Det måste vara 0 eller ett positivt tal.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.LagerAntal = newStock;
                 break;
@@ -200,7 +200,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Inga kategorier finns. Skapa en kategori innan du uppdaterar produkten.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 var kategori = MenuBase.NavigateList(categories.ToList(), (items, index) =>
                 {
@@ -216,7 +216,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Inga leverantörer finns. Skapa en leverantör innan du uppdaterar produkten.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
                 {
@@ -232,7 +232,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig färg.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Färg = newColor;
                 break;
@@ -242,7 +242,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig storlek.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Storlek = newSize;
                 break;

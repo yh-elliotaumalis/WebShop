@@ -17,8 +17,8 @@ public class ProduktService(IProduktRepository repo) : IProduktService
     public async Task<IEnumerable<Produkt>> GetBySearchAsync(string search)
         => await repo.GetBySearchAsync(search);
 
-    public async Task<IEnumerable<Produkt>> GetFeaturedAsync()
-        => await repo.GetFeaturedAsync();
+    public async Task<IEnumerable<Produkt>> GetFeaturedAsync(int limit)
+        => await repo.GetFeaturedAsync(limit);
 
     public async Task<IEnumerable<Produkt>> GetBestSellersAsync(int antal)
         => await repo.GetBestSellersAsync(antal);

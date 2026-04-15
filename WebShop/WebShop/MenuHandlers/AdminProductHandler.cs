@@ -81,6 +81,8 @@ public class AdminProductHandler
             return;
         }
 
+        var ärUtvald = ConsoleHelper.ReadString("Är produkten utvald? (y/N): ").ToLower() == "y";
+
         var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
         {
             Console.WriteLine("Välj en leverantör:");
@@ -108,6 +110,7 @@ public class AdminProductHandler
             Leverantör = leverantör,
             Färg = color,
             Storlek = size,
+            ÄrUtvald = ärUtvald
         };
 
         await _productService.AddAsync(product);
@@ -127,13 +130,13 @@ public class AdminProductHandler
         {
             Console.WriteLine("Välj en produkt att uppdatera:");
             for (int i = 0; i < items.Count; i++)
-                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn} {(items[i].ÄrUtvald ? " [UTVALD]" : "")}");
         });
         if (selectedProduct == null) return;
 
         var product = await _productService.GetByIdAsync(selectedProduct.Id);
 
-        var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek" };
+        var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek", "Utvald" };
         var selectedField = MenuBase.NavigateList(options, (items, index) =>
         {
             Console.WriteLine("Vad vill du uppdatera?");
@@ -157,7 +160,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt produktnamn. Det måste vara minst 3 tecken långt.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Namn = newName;
                 break;
@@ -167,7 +170,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig beskrivning. Den måste vara minst 10 tecken lång.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Beskrivning = newDescription;
                 break;
@@ -177,7 +180,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt pris. Det måste vara ett positivt tal.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Pris = newPrice;
                 break;
@@ -187,7 +190,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltigt lagerantal. Det måste vara 0 eller ett positivt tal.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.LagerAntal = newStock;
                 break;
@@ -197,7 +200,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Inga kategorier finns. Skapa en kategori innan du uppdaterar produkten.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 var kategori = MenuBase.NavigateList(categories.ToList(), (items, index) =>
                 {
@@ -213,7 +216,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Inga leverantörer finns. Skapa en leverantör innan du uppdaterar produkten.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
                 {
@@ -229,7 +232,7 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig färg.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Färg = newColor;
                 break;
@@ -239,9 +242,19 @@ public class AdminProductHandler
                 {
                     Console.WriteLine("Ogiltig storlek.");
                     Console.ReadKey(true);
-                    break;
+                    return;
                 }
                 product.Storlek = newSize;
+                break;
+            case "Utvald":
+                product.ÄrUtvald = !product.ÄrUtvald;
+                if (product.ÄrUtvald)
+                {
+                    Console.WriteLine("Produkten är nu utvald!");
+                } else
+                {
+                    Console.WriteLine("Produkten är nu inte längre utvald!");
+                }
                 break;
         }
 

@@ -60,7 +60,7 @@ public class MainMenu : MenuBase
     protected override void GetThreeProduckter()
     {
         _products = _productService
-            .GetBestSellersAsync(3)
+            .GetFeaturedAsync(3)
             .GetAwaiter()
             .GetResult()
             .ToList();
@@ -69,6 +69,11 @@ public class MainMenu : MenuBase
     protected override void PopuleraProduker()
     {
         var products = _products;
+
+        if (products != null && !products.Any())
+        {
+            return;
+        }
 
         WriteCentered("=== Populära Produkter ===");
         Console.WriteLine();

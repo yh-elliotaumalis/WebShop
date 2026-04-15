@@ -9,7 +9,7 @@ public interface IProduktService
     Task<IEnumerable<Produkt>> GetBestSellersAsync(int antal);
     Task<IEnumerable<Produkt>> GetByCategoryAsync(Guid kategoriId);
     Task<IEnumerable<Produkt>> GetBySearchAsync(string search);
-    Task<IEnumerable<Produkt>> GetFeaturedAsync();
+    Task<IEnumerable<Produkt>> GetFeaturedAsync(int limit);
     Task AddAsync(Produkt produkt);
     Task UpdateAsync(Produkt produkt);
     Task DeleteAsync(Guid id);

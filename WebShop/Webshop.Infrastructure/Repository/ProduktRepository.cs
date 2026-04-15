@@ -24,9 +24,11 @@ public class ProduktRepository(WebshopDbContext db) : IProduktRepository
         => await GetProdukterWithIncludes()
             .Where(p => p.KategoriId == categoryId)
             .ToListAsync();
-    public async Task<IEnumerable<Produkt>> GetFeaturedAsync()
+    public async Task<IEnumerable<Produkt>> GetFeaturedAsync(int limit)
     => await GetProdukterWithIncludes()
         .Where(p => p.ÄrUtvald)
+        .OrderBy(p => Microsoft.EntityFrameworkCore.EF.Functions.Random())
+        .Take(limit)
         .ToListAsync();
 
     public async Task<IEnumerable<Produkt>> GetBestSellersAsync(int antal)

@@ -81,6 +81,8 @@ public class AdminProductHandler
             return;
         }
 
+        var ärUtvald = ConsoleHelper.ReadString("Är produkten utvald? (y/N): ").ToLower() == "y";
+
         var leverantör = MenuBase.NavigateList(leverantörer.ToList(), (items, index) =>
         {
             Console.WriteLine("Välj en leverantör:");
@@ -108,6 +110,7 @@ public class AdminProductHandler
             Leverantör = leverantör,
             Färg = color,
             Storlek = size,
+            ÄrUtvald = ärUtvald
         };
 
         await _productService.AddAsync(product);
@@ -127,13 +130,13 @@ public class AdminProductHandler
         {
             Console.WriteLine("Välj en produkt att uppdatera:");
             for (int i = 0; i < items.Count; i++)
-                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn}");
+                Console.WriteLine($"{(i == index ? "> " : "  ")}{items[i].Namn} {(items[i].ÄrUtvald ? " [UTVALD]" : "")}");
         });
         if (selectedProduct == null) return;
 
         var product = await _productService.GetByIdAsync(selectedProduct.Id);
 
-        var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek" };
+        var options = new List<string> { "Namn", "Beskrivning", "Pris", "Lagerantal", "Kategori", "Leverantör", "Färg", "Storlek", "Utvald" };
         var selectedField = MenuBase.NavigateList(options, (items, index) =>
         {
             Console.WriteLine("Vad vill du uppdatera?");
@@ -242,6 +245,16 @@ public class AdminProductHandler
                     break;
                 }
                 product.Storlek = newSize;
+                break;
+            case "Utvald":
+                product.ÄrUtvald = !product.ÄrUtvald;
+                if (product.ÄrUtvald)
+                {
+                    Console.WriteLine("Produkten är nu utvald!");
+                } else
+                {
+                    Console.WriteLine("Produkten är nu inte längre utvald!");
+                }
                 break;
         }
 

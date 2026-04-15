@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace WebShop.Presentation.Validator;
 
@@ -55,6 +52,7 @@ public class CustomerValidator
         if (string.IsNullOrWhiteSpace(phone))
         {
             error = "Mobilnumret får inte vara tomt.";
+            return false;
         }
 
         if (phone.Length < 7)

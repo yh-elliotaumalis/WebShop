@@ -9,10 +9,13 @@ namespace Webshop.Presentation.Menus;
 
 public class MainMenu : MenuBase
 {
+    private readonly IFraktOmbudRepository _fraktOmbudRepository;
     private readonly IProduktService _productService;
     private readonly IKategoriService _kategoriService;
     private readonly ILeverantörService _leverantörService;
+    private readonly IVarukorgService _varukorgService;
     private readonly IKundService _kundService;
+    private readonly IOrderService _orderService;
 
     private int _selectedProductIndex = 0;
     private readonly CurrencyService _currencyService = new();
@@ -25,20 +28,26 @@ public class MainMenu : MenuBase
         IProduktService productService,
         IKategoriService kategoriService,
         ILeverantörService leverantörService,
-        IKundService kundService)
+        IVarukorgService varukorgService,
+       IKundService kundService,
+       IOrderService orderService,
+    IFraktOmbudRepository fraktOmbudRepository)
     {
         _productService = productService;
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
+        _varukorgService = varukorgService;
         _kundService = kundService;
+        _fraktOmbudRepository = fraktOmbudRepository;
+        _orderService = orderService;
 
-       
+
         _rate = _currencyService
             .GetRateAsync("SEK", "USD")
             .GetAwaiter()
             .GetResult();
 
-        
+
         _options = new[]
         {
             "Kund",
@@ -160,10 +169,8 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-               
-                new CustomerMenu(_productService, _rate).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudRepository, _rate, _orderService).ShowMenu("Kund Meny");
                 return false;
-
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);

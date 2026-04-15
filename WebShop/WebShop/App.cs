@@ -1,5 +1,4 @@
-﻿using HustlersAB.Admin.Menus;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Webshop.Application.Services;
@@ -24,6 +23,7 @@ public class App
         var servicesProvider = services.BuildServiceProvider();
 
         using var db = servicesProvider.GetRequiredService<WebshopDbContext>();
+        db.Database.Migrate();
         WebShopSeeder.Seed(db);
 
         var produktRepo = new ProduktRepository(db);
@@ -35,11 +35,14 @@ public class App
         var leverantörRepo = new LeverantörRepository(db);
         var leverantörService = new LeverantörService(leverantörRepo);
 
+        var varukorgService = new VarukorgService();
         var kundRepo = new KundRepository(db);
         var kundService = new KundService(kundRepo);
+        var fraktOmbudRepo = new FraktOmbudRepository(db);
+        var orderRepo = new OrderRepository(db);
+        var orderService = new OrderService(orderRepo);
 
-        var menu = new MainMenu(produktService, kategoriService, leverantörService, kundService);
+        var menu = new MainMenu(produktService, kategoriService, leverantörService, varukorgService, kundService, orderService, fraktOmbudRepo);
         menu.ShowMenu("Välj meny");
-
     }
 }

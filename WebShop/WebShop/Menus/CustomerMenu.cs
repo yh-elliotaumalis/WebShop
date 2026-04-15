@@ -1,6 +1,7 @@
 ﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Menus;
 using WebShop.Presentation.Validator;
 
 namespace HustlersAB.Admin.Menus;
@@ -8,17 +9,23 @@ namespace HustlersAB.Admin.Menus;
 public class CustomerMenu : MenuBase
 {
     private CustomerProductHandler _handler;
-    private readonly decimal _rate; 
-
-    public CustomerMenu(IProduktService productService, decimal rate)
+    private IVarukorgService _varukorgService;
+    private IProduktService _produktService;
+    private readonly IKundService _kundService;
+    private readonly IFraktOmbudRepository _fraktOmbudRepository;
+    private readonly decimal _rate;
+    private readonly IOrderService _orderService;
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudRepository fraktOmbudRepository, decimal rate, IOrderService orderServie)
     {
+        _produktService = productService;
+        _varukorgService = varukorgService;
+        _kundService = kundService;
+        _fraktOmbudRepository = fraktOmbudRepository;
         _handler = new CustomerProductHandler(productService);
         _rate = rate;
-
-        _options = new[] { "Handla produkter", "Varukorgen", "Tillbaka" };
+        _orderService = orderServie;
         _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
-
     protected override bool ExecuteChoice(int selectedIndex)
     {
         switch (selectedIndex)
@@ -31,9 +38,7 @@ public class CustomerMenu : MenuBase
                 return false;
 
             case 2:
-                Console.Clear();
-                Console.WriteLine("Varukorgen kommer senare...");
-                Console.ReadKey(true);
+                new CartMenu(_produktService, _varukorgService, _fraktOmbudRepository, _kundService, _orderService).ShowMenu("Varukorg");
                 return false;
 
             case 3:
@@ -98,7 +103,7 @@ public class CustomerMenu : MenuBase
             {
                 var markering = num == selectedIndex ? "> " : "  ";
 
-               
+
                 var converted = product.Pris * _rate;
 
                 Console.WriteLine(
@@ -123,6 +128,7 @@ public class CustomerMenu : MenuBase
         ShowProductDetails(produkt);
     }
 
+
     private void ShowProductDetails(Produkt? product)
     {
         if (product == null) return;
@@ -138,7 +144,18 @@ public class CustomerMenu : MenuBase
         Console.WriteLine($"{"Léverantör:".PadRight(20)}{product.Leverantör?.Namn}");
         Console.WriteLine($"{"LagerAntal:".PadRight(20)}{product.LagerAntal}");
 
+        Console.WriteLine("\nEnter = Lägg i varukorg | Escape = Tillbaka");
+
         while (Console.KeyAvailable) Console.ReadKey(true);
-        while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
+        while (true)
+        {
+            var key = Console.ReadKey(true).Key;
+            if (key == ConsoleKey.Escape) break;
+            if (key == ConsoleKey.Enter)
+            {
+                _varukorgService.AddProduct(product.Id, 1);
+                Console.WriteLine("Produkt tillagd i varukorgen!");
+            }
+        }
     }
 }

@@ -14,8 +14,9 @@ public class CartMenu : MenuBase
     private readonly IFraktOmbudRepository _fraktOmbudRepository;
     private readonly IKundService _kundService;
     private readonly CustomerProductHandler _handler;
+    private readonly IOrderService _orderService;
 
-    public CartMenu(IProduktService produktService, IVarukorgService varukorgService, IFraktOmbudRepository fraktOmbudRepository, IKundService kundService)
+    public CartMenu(IProduktService produktService, IVarukorgService varukorgService, IFraktOmbudRepository fraktOmbudRepository, IKundService kundService, IOrderService orderService)
     {
         _produktService = produktService;
         _varukorgService = varukorgService;
@@ -23,6 +24,7 @@ public class CartMenu : MenuBase
         _kundService = kundService;
         _options = new[] { "Ändra antal", "Tabort produkt", "Rensa varukorg", "Betala", "Tillbaka" };
         _handler = new CustomerProductHandler(produktService);
+        _orderService = orderService;
     }
 
     protected override bool ExecuteChoice(int selectedIndex)
@@ -212,15 +214,16 @@ public class CartMenu : MenuBase
             {
                 Console.Clear();
                 Console.Write("Ange ditt mobilnummer: ");
-                if (!int.TryParse(Console.ReadLine(), out int telefon))
+                var telefon = Console.ReadLine() ?? "";
+                if (!CustomerValidator.ValidateCustomerPhone(telefon, out var err))
                 {
-                    Console.WriteLine("Ogiltigt nummer. Tryck valfri tangent.");
+                    Console.WriteLine(err);
                     Console.ReadKey(true);
                     continue;
                 }
 
-                var alleKunder = _kundService.GetAllAsync().GetAwaiter().GetResult();
-                var kund = alleKunder.FirstOrDefault(k => k.MobilNummer == telefon.ToString());
+                var allaKunder = _kundService.GetAllAsync().GetAwaiter().GetResult();
+                var kund = allaKunder.FirstOrDefault(k => k.MobilNummer == telefon);
 
                 if (kund == null)
                 {
@@ -306,7 +309,22 @@ public class CartMenu : MenuBase
         Console.WriteLine("==========================");
         Console.WriteLine("\nTack för din beställning!");
 
+        var produktOrdrar = items.Select(item =>
+        {
+            var produkt = produkter.First(p => p.Id == item.Key);
+            return new ProduktOrder
+            {
+                Id = Guid.NewGuid(),
+                ProduktId = item.Key,
+                Antal = item.Value,
+                PrisvidKöp = produkt.Pris
+            };
+        }).ToList();
+
+        _orderService.CreateOrderAsync(kund.Id, produktOrdrar, frakt.Id, betalsätt).GetAwaiter().GetResult();
+
         _varukorgService.Clear();
+
         Console.ReadKey(true);
     }
 

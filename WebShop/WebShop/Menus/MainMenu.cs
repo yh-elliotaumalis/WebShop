@@ -8,10 +8,12 @@ namespace Webshop.Presentation.Menus;
 
 public class MainMenu : MenuBase
 {
+    private readonly IFraktOmbudRepository _fraktOmbudRepository;
     private readonly IProduktService _productService;
     private readonly IKategoriService _kategoriService;
     private readonly ILeverantörService _leverantörService;
     private readonly IVarukorgService _varukorgService;
+    private readonly IKundService _kundService;
 
     private int _selectedProductIndex = 0;
 
@@ -22,13 +24,16 @@ public class MainMenu : MenuBase
         IProduktService productService,
         IKategoriService kategoriService,
         ILeverantörService leverantörService,
-        IVarukorgService varukorgService)
+        IVarukorgService varukorgService,
+       IKundService kundService,
+    IFraktOmbudRepository fraktOmbudRepository)
     {
         _productService = productService;
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
         _varukorgService = varukorgService;
-
+        _fraktOmbudRepository = fraktOmbudRepository;
+        _kundService = kundService;
         _options = new[]
         {
             "Kund",
@@ -150,7 +155,7 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService, _varukorgService).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudRepository).ShowMenu("Kund Meny");
                 return false;
 
             case 1:

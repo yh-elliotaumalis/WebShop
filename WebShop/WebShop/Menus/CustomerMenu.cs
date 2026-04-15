@@ -11,11 +11,15 @@ public class CustomerMenu : MenuBase
     private CustomerProductHandler _handler;
     private IVarukorgService _varukorgService;
     private IProduktService _produktService;
+    private readonly IKundService _kundService;
+    private readonly IFraktOmbudRepository _fraktOmbudRepository;
 
-    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService)
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudRepository fraktOmbudRepository)
     {
         _produktService = productService;
         _varukorgService = varukorgService;
+        _kundService = kundService;
+        _fraktOmbudRepository = fraktOmbudRepository;
         _handler = new CustomerProductHandler(productService);
         _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
@@ -32,7 +36,7 @@ public class CustomerMenu : MenuBase
                 return false;
 
             case 2:
-                new CartMenu(_produktService, _varukorgService).ShowMenu("Varukorg");
+                new CartMenu(_produktService, _varukorgService, _fraktOmbudRepository, _kundService).ShowMenu("Varukorg");
                 return false;
 
             case 3:

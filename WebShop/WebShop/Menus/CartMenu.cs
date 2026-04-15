@@ -3,6 +3,7 @@ using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using Webshop.Domain.Enums;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Validator;
 
 namespace WebShop.Presentation.Menus;
 
@@ -10,12 +11,16 @@ public class CartMenu : MenuBase
 {
     private readonly IVarukorgService _varukorgService;
     private readonly IProduktService _produktService;
+    private readonly IFraktOmbudRepository _fraktOmbudRepository;
+    private readonly IKundService _kundService;
     private readonly CustomerProductHandler _handler;
 
-    public CartMenu(IProduktService produktService, IVarukorgService varukorgService)
+    public CartMenu(IProduktService produktService, IVarukorgService varukorgService, IFraktOmbudRepository fraktOmbudRepository, IKundService kundService)
     {
         _produktService = produktService;
         _varukorgService = varukorgService;
+        _fraktOmbudRepository = fraktOmbudRepository;
+        _kundService = kundService;
         _options = new[] { "Ändra antal", "Tabort produkt", "Rensa varukorg", "Betala", "Tillbaka" };
         _handler = new CustomerProductHandler(produktService);
     }
@@ -24,24 +29,15 @@ public class CartMenu : MenuBase
     {
         switch (selectedIndex)
         {
-            case 0:
-                UpdateQuantity();
-                return false;
-            case 1:
-                RemoveProduct();
-                return false;
-            case 2:
-                _varukorgService.Clear();
-                return false;
-            case 3:
-                CheckOut();
-                return false;
-            case 4:
-                return true;
+            case 0: UpdateQuantity(); return false;
+            case 1: RemoveProduct(); return false;
+            case 2: _varukorgService.Clear(); return false;
+            case 3: CheckOut(); return false;
+            case 4: return true;
         }
-
         return false;
     }
+
     private void ShowCart()
     {
         var items = _varukorgService.GetItems();
@@ -68,6 +64,13 @@ public class CartMenu : MenuBase
 
     private void RemoveProduct()
     {
+        if (_varukorgService.IsEmpty())
+        {
+            Console.WriteLine("Varukorgen är tom!");
+            Console.ReadKey(true);
+            return;
+        }
+
         var items = _varukorgService.GetItems();
         var produkter = new List<Produkt>();
         foreach (var item in items)
@@ -89,6 +92,13 @@ public class CartMenu : MenuBase
 
     private void UpdateQuantity()
     {
+        if (_varukorgService.IsEmpty())
+        {
+            Console.WriteLine("Varukorgen är tom!");
+            Console.ReadKey(true);
+            return;
+        }
+
         var items = _varukorgService.GetItems();
         var produkter = new List<Produkt>();
         foreach (var item in items)
@@ -111,41 +121,84 @@ public class CartMenu : MenuBase
         if (int.TryParse(input, out int nyttAntal) && nyttAntal > 0)
             _varukorgService.UpdateQuantity(vald.Id, nyttAntal);
     }
+
     private Kund GetCustomerInfo()
     {
         Console.Clear();
         Console.WriteLine("=== Kunduppgifter ===");
-        Console.Write("Namn: ");
-        var namn = Console.ReadLine() ?? "";
-        Console.Write("Adress: ");
-        var adress = Console.ReadLine() ?? "";
-        Console.Write("Stad: ");
-        var stad = Console.ReadLine() ?? "";
-        Console.Write("Postnummer: ");
-        int.TryParse(Console.ReadLine(), out int postnummer);
-        Console.Write("Mobilnummer: ");
-        int.TryParse(Console.ReadLine(), out int mobil);
-        Console.Write("Epost: ");
-        var epost = Console.ReadLine() ?? "";
 
         return new Kund
         {
             Id = Guid.NewGuid(),
-            Namn = namn,
-            Adress = adress,
-            Stad = stad,
-            Postnummer = postnummer,
-            MobilNummer = mobil,
-            Epost = epost
+            Namn = CustomerValidator.GetValidatedName(),
+            Adress = CustomerValidator.GetValidatedAddress(),
+            Stad = CustomerValidator.GetValidatedCity(),
+            Postnummer = CustomerValidator.GetValidatedPostNummer(),
+            MobilNummer = CustomerValidator.GetValidatedPhone(),
+            Epost = CustomerValidator.GetValidatedEmail()
         };
     }
-    private (string namn, decimal pris, string leveranstid) GetShippingMetod()
+
+    private Kund? GetOrCreateCustomer()
     {
-        var alternativ = new List<string>
+        while (true)
+        {
+            var alternativ = new List<string> { "Ny kund", "Befintlig kund" };
+
+            var vald = NavigateList(alternativ, (list, i) =>
+            {
+                Console.Clear();
+                Console.WriteLine("=== Kund ===\n");
+                for (int j = 0; j < list.Count; j++)
+                {
+                    var markering = j == i ? "> " : "  ";
+                    Console.WriteLine($"{markering}{list[j]}");
+                }
+            });
+
+            if (vald == null)
+                return null;
+
+            if (vald == "Ny kund")
+            {
+                var nyKund = GetCustomerInfo();
+                _kundService.AddAsync(nyKund).GetAwaiter().GetResult();
+                return nyKund;
+            }
+
+            if (vald == "Befintlig kund")
+            {
+                Console.Clear();
+                Console.Write("Ange ditt mobilnummer: ");
+                if (!int.TryParse(Console.ReadLine(), out int telefon))
+                {
+                    Console.WriteLine("Ogiltigt nummer. Tryck valfri tangent.");
+                    Console.ReadKey(true);
+                    continue;
+                }
+
+                var alleKunder = _kundService.GetAllAsync().GetAwaiter().GetResult();
+                var kund = alleKunder.FirstOrDefault(k => k.MobilNummer == telefon);
+
+                if (kund == null)
+                {
+                    Console.WriteLine("Ingen kund hittades med det numret. Tryck valfri tangent.");
+                    Console.ReadKey(true);
+                    continue;
+                }
+
+                Console.Clear();
+                Console.WriteLine($"Hittade: {kund.Namn} – {kund.Adress}, {kund.Stad}");
+                Console.WriteLine("Tryck Enter för att fortsätta eller Escape för att gå tillbaka.");
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.Enter)
+                    return kund;
+            }
+        }
+    }
+    private FraktOmbud GetShippingMetod()
     {
-        "PostNord - 49kr (3-5 dagar)",
-        "DHL - 99kr (1-3 dagar)"
-    };
+        var alternativ = _fraktOmbudRepository.GetAllAsync().GetAwaiter().GetResult().ToList();
 
         var vald = NavigateList(alternativ, (list, i) =>
         {
@@ -153,17 +206,16 @@ public class CartMenu : MenuBase
             for (int j = 0; j < list.Count; j++)
             {
                 var markering = j == i ? "> " : "  ";
-                Console.WriteLine($"{markering}{list[j]}");
+                Console.WriteLine($"{markering}{list[j].Namn} - {list[j].Pris:0.00}kr");
             }
         });
 
-        return vald == alternativ[0] ? ("PostNord", 49m, "3-5 dagar") : ("DHL", 99m, "1-3 dagar");
+        return vald!;
     }
-
 
     private Betalsätt GetPaymentMetod()
     {
-        var alternativ = new List<string> { "Kort", "Swish", "Faktura" };
+        var alternativ = Enum.GetNames<Betalsätt>().ToList();
 
         var vald = NavigateList(alternativ, (list, i) =>
         {
@@ -175,17 +227,10 @@ public class CartMenu : MenuBase
             }
         });
 
-        return vald switch
-        {
-            "Kort" => Betalsätt.Kort,
-            "Swish" => Betalsätt.Swish,
-            _ => Betalsätt.Faktura
-        };
+        return Enum.Parse<Betalsätt>(vald!);
     }
 
-
-
-    private void ShowConfirmation(Kund kund, string fraktNamn, decimal fraktPris, string leveranstid, Betalsätt betalsätt)
+    private void ShowConfirmation(Kund kund, FraktOmbud frakt, Betalsätt betalsätt)
     {
         var items = _varukorgService.GetItems();
         var produkter = new List<Produkt>();
@@ -194,7 +239,7 @@ public class CartMenu : MenuBase
             var produkt = _handler.GetProductAsync(item.Key).GetAwaiter().GetResult()!;
             produkter.Add(produkt);
         }
-        var totalPris = _varukorgService.CalculateTotal(produkter) + fraktPris;
+        var totalPris = _varukorgService.CalculateTotal(produkter) + frakt.Pris;
         var moms = totalPris * 0.25m;
         var utanMoms = totalPris - moms;
 
@@ -202,7 +247,7 @@ public class CartMenu : MenuBase
         Console.WriteLine("=== Orderbekräftelse ===");
         Console.WriteLine($"Kund:         {kund.Namn}");
         Console.WriteLine($"Adress:       {kund.Adress}, {kund.Postnummer} {kund.Stad}");
-        Console.WriteLine($"Frakt:        {fraktNamn} {fraktPris:0.00}SEK ({leveranstid})");
+        Console.WriteLine($"Frakt:        {frakt.Namn} {frakt.Pris:0.00}SEK");
         Console.WriteLine($"Betalsätt:    {betalsätt}");
         Console.WriteLine("==========================");
         foreach (var item in items)
@@ -213,7 +258,7 @@ public class CartMenu : MenuBase
         Console.WriteLine("------------------------");
         Console.WriteLine($"Exkl. moms:   {utanMoms:0.00}SEK");
         Console.WriteLine($"Moms (25%):   {moms:0.00}SEK");
-        Console.WriteLine($"Frakt:        {fraktPris:0.00}SEK");
+        Console.WriteLine($"Frakt:        {frakt.Pris:0.00}SEK");
         Console.WriteLine("------------------------");
         Console.WriteLine($"Totalt:       {totalPris:0.00}SEK");
         Console.WriteLine("==========================");
@@ -222,12 +267,15 @@ public class CartMenu : MenuBase
         _varukorgService.Clear();
         Console.ReadKey(true);
     }
+
     private void CheckOut()
     {
-        var kund = GetCustomerInfo();
-        var (fraktNamn, fraktPris, leveranstid) = GetShippingMetod();
+        var kund = GetOrCreateCustomer();
+        if (kund == null) return;
+
+        var frakt = GetShippingMetod();
         var betalsätt = GetPaymentMetod();
-        ShowConfirmation(kund, fraktNamn, fraktPris, leveranstid, betalsätt);
+        ShowConfirmation(kund, frakt, betalsätt);
     }
 
     protected override void DrawContent()

@@ -1,5 +1,6 @@
 ﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
+using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
 using WebShop.Presentation.UI;
@@ -15,6 +16,8 @@ public class MainMenu : MenuBase
     private readonly IKundService _kundService;
 
     private int _selectedProductIndex = 0;
+    private readonly CurrencyService _currencyService = new();
+    private decimal _rate;
 
 
     private List<Produkt> _products = new();
@@ -32,6 +35,13 @@ public class MainMenu : MenuBase
         _varukorgService = varukorgService;
         _kundService = kundService;
 
+       
+        _rate = _currencyService
+            .GetRateAsync("SEK", "USD")
+            .GetAwaiter()
+            .GetResult();
+
+        
         _options = new[]
         {
             "Kund",
@@ -82,7 +92,7 @@ public class MainMenu : MenuBase
             Console.Write("│ " + p.Namn.PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 2);
-            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr".PadRight(boxWidth - 4) + " │");
+            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr / Pris USD: {(p.Pris * _rate):0.00}".PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 3);
             Console.Write("│ " + $"Färg: {p.Färg}".PadRight(boxWidth - 4) + " │");
@@ -154,6 +164,8 @@ public class MainMenu : MenuBase
         {
             case 0:
                 new CustomerMenu(_productService, _varukorgService).ShowMenu("Kund Meny");
+               
+                new CustomerMenu(_productService, _rate).ShowMenu("Kund Meny");
                 return false;
 
             case 1:

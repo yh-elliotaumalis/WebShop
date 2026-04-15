@@ -19,12 +19,20 @@ public class KategoriRepository(WebshopDbContext db) : IKategoriRepository
             .FirstOrDefaultAsync(k => k.Id == id);
 
     public async Task<Kategori?> GetMostPopularCategoryAsync()
-     => await GetCategoriesWithIncludes()
-         .OrderByDescending(k => k.Produkter
-             .Sum(p => p.ProduktOrdrar != null
-                 ? p.ProduktOrdrar.Sum(po => po.Antal)
-                 : 0))
-         .FirstOrDefaultAsync();
+    {
+        var kategoriId = await db.ProduktOrdrar
+            .Include(p => p.Produkt)
+            .GroupBy(p => p.Produkt.KategoriId)
+            .OrderByDescending(g => g.Sum(p => p.Antal))
+            .Select(g => g.Key)
+            .FirstOrDefaultAsync();
+
+        if (kategoriId == default) return null;
+
+        return await db.Kategorier
+            .Include(k => k.Produkter)
+            .FirstOrDefaultAsync(k => k.Id == kategoriId);
+    }
 
 
     public async Task AddAsync(Kategori kategori)

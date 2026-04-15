@@ -283,4 +283,10 @@ public class AdminProductHandler
         Console.WriteLine($"\nProdukten {selectedProduct.Namn} har tagits bort!");
         Console.ReadKey(true);
     }
+    //Hämtar mest produkter från service
+  public async Task<IEnumerable<Produkt>> GetBestProductsAsync(int antal)
+    {
+        return await _productService.GetBestSellersAsync(antal);
+    }
+
 }

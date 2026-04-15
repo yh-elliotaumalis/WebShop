@@ -1,4 +1,4 @@
-﻿using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.MenuHandlers;
 using WebShop.Presentation.Menus;
 
 namespace HustlersAB.Admin.Menus;
@@ -67,8 +67,9 @@ public class AdminMenu : MenuBase
 
             case 5:
                 Console.Clear();
-                Console.WriteLine("Statistik kommer senare...");
-                Console.ReadKey(true);
+                var statisticsMenu = new AdminStatisticsMenu(_productHandler, _categoryHandler);
+                statisticsMenu.ShowMenu("Se statistik");
+                return false;
                 return false;
 
             case 6:

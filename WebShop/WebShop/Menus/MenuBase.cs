@@ -4,7 +4,9 @@ public abstract class MenuBase
 {
     protected string[] _options = Array.Empty<string>();
     protected bool _isProductFocused = false;
-    protected virtual void LoadData() { }
+
+    protected virtual void GetThreeProduckter() { }
+
     protected virtual void PopuleraProduker() { }
     protected virtual void MoveLeft() { }
     protected virtual void MoveRight() { }
@@ -36,7 +38,7 @@ public abstract class MenuBase
         int selectedIndex = 0;
 
 
-        LoadData();
+        GetThreeProduckter();
 
         while (true)
         {

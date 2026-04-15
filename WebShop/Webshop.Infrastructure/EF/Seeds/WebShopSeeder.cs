@@ -46,10 +46,10 @@ namespace Webshop.Infrastructure.EF.Seeds
 
             var kunder = new List<Kund>
             {
-                new Kund { Id = Guid.NewGuid(), Namn = "Anna Andersson", Adress = "Storgatan 1", Stad = "Stockholm", Postnummer = 41105, MobilNummer = 0701234567, Epost = "anna.andersson@example.com" },
-                new Kund { Id = Guid.NewGuid(), Namn = "Lars Larsson", Adress = "Lilla Vägen 2", Stad = "Göteborg", Postnummer = 41106, MobilNummer = 0702345678, Epost = "lars.larsson@example.com" },
-                new Kund { Id = Guid.NewGuid(), Namn = "Eva Eriksson", Adress = "Södra Gatan 3", Stad = "Malmö", Postnummer = 41107, MobilNummer = 0703456789, Epost = "eva.eriksson@example.com" },
-                new Kund { Id = Guid.NewGuid(), Namn = "Per Persson", Adress = "Norra Vägen 4", Stad = "Uppsala", Postnummer = 41108, MobilNummer = 0704567890, Epost = "per.persson@example.com" }
+                new Kund { Id = Guid.NewGuid(), Namn = "Anna Andersson", Adress = "Storgatan 1", Stad = "Stockholm", Postnummer = 41105, MobilNummer = "0701234567", Epost = "anna.andersson@example.com" },
+                new Kund { Id = Guid.NewGuid(), Namn = "Lars Larsson", Adress = "Lilla Vägen 2", Stad = "Göteborg", Postnummer = 41106, MobilNummer = "0702345678", Epost = "lars.larsson@example.com" },
+                new Kund { Id = Guid.NewGuid(), Namn = "Eva Eriksson", Adress = "Södra Gatan 3", Stad = "Malmö", Postnummer = 41107, MobilNummer = "0703456789", Epost = "eva.eriksson@example.com" },
+                new Kund { Id = Guid.NewGuid(), Namn = "Per Persson", Adress = "Norra Vägen 4", Stad = "Uppsala", Postnummer = 41108, MobilNummer = "0704567890", Epost = "per.persson@example.com" }
             };
 
             var ordrar = new List<Order>

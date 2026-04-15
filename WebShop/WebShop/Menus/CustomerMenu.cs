@@ -14,13 +14,19 @@ public class CustomerMenu : MenuBase
     private readonly IKundService _kundService;
     private readonly IFraktOmbudRepository _fraktOmbudRepository;
 
-    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService, IKundService kundService, IFraktOmbudRepository fraktOmbudRepository)
+    public CustomerMenu(IProduktService productService, IVarukorgService varukorgService)
+    private readonly decimal _rate; 
+
+    public CustomerMenu(IProduktService productService, decimal rate)
     {
         _produktService = productService;
         _varukorgService = varukorgService;
         _kundService = kundService;
         _fraktOmbudRepository = fraktOmbudRepository;
         _handler = new CustomerProductHandler(productService);
+        _rate = rate;
+
+        _options = new[] { "Handla produkter", "Varukorgen", "Tillbaka" };
         _options = new[] { "Handla produkter", "Sök produkt", "Varukorgen", "Tillbaka" };
     }
 
@@ -100,7 +106,14 @@ public class CustomerMenu : MenuBase
             foreach (var product in group)
             {
                 var markering = num == selectedIndex ? "> " : "  ";
-                Console.WriteLine($"{markering}[{num + 1}] {product.Namn.PadRight(20)} {product.Pris} kr");
+
+               
+                var converted = product.Pris * _rate;
+
+                Console.WriteLine(
+                    $"{markering}[{num + 1}] {product.Namn.PadRight(20)} {product.Pris:0.00} kr {converted:0.00} USD"
+                );
+
                 num++;
             }
         }
@@ -111,13 +124,12 @@ public class CustomerMenu : MenuBase
         var productList = _handler.GetAllProductsAsync().GetAwaiter().GetResult().ToList();
         var groups = productList.GroupBy(p => p.Kategori!.Namn);
 
-        while (true)
-        {
-            var vald = NavigateList(productList, (list, i) => DrawCatalog(groups, i));
-            if (vald == null) return;
-            var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
-            ShowProductDetails(produkt);
-        }
+        var vald = NavigateList(productList, (list, i) => DrawCatalog(groups, i));
+        if (vald == null) return;
+
+        var produkt = _handler.GetProductAsync(vald.Id).GetAwaiter().GetResult();
+
+        ShowProductDetails(produkt);
     }
 
 
@@ -127,9 +139,11 @@ public class CustomerMenu : MenuBase
 
         Console.Clear();
 
+        var converted = product.Pris * _rate;
+
         Console.WriteLine($"{"Namn:".PadRight(20)}{product.Namn}");
         Console.WriteLine($"{"Beskrivning:".PadRight(20)}{product.Beskrivning}");
-        Console.WriteLine($"{"Pris:".PadRight(20)}{product.Pris}");
+        Console.WriteLine($"{"Pris:".PadRight(20)}{product.Pris:0.00} kr {converted:0.00} USD");
         Console.WriteLine($"{"Kategori:".PadRight(20)}{product.Kategori?.Namn}");
         Console.WriteLine($"{"Léverantör:".PadRight(20)}{product.Leverantör?.Namn}");
         Console.WriteLine($"{"LagerAntal:".PadRight(20)}{product.LagerAntal}");

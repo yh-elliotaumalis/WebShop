@@ -1,5 +1,6 @@
 ﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
+using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
 using WebShop.Presentation.UI;
@@ -16,6 +17,8 @@ public class MainMenu : MenuBase
     private readonly IKundService _kundService;
 
     private int _selectedProductIndex = 0;
+    private readonly CurrencyService _currencyService = new();
+    private decimal _rate;
 
 
     private List<Produkt> _products = new();
@@ -32,8 +35,14 @@ public class MainMenu : MenuBase
         _kategoriService = kategoriService;
         _leverantörService = leverantörService;
         _varukorgService = varukorgService;
-        _fraktOmbudRepository = fraktOmbudRepository;
-        _kundService = kundService;
+
+       
+        _rate = _currencyService
+            .GetRateAsync("SEK", "USD")
+            .GetAwaiter()
+            .GetResult();
+
+        
         _options = new[]
         {
             "Kund",
@@ -43,7 +52,7 @@ public class MainMenu : MenuBase
     }
 
 
-    protected override void LoadData()
+    protected override void GetThreeProduckter()
     {
         _products = _productService
             .GetBestSellersAsync(3)
@@ -84,7 +93,7 @@ public class MainMenu : MenuBase
             Console.Write("│ " + p.Namn.PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 2);
-            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr".PadRight(boxWidth - 4) + " │");
+            Console.Write("│ " + $"Pris: {p.Pris:0.00} kr / Pris USD: {(p.Pris * _rate):0.00}".PadRight(boxWidth - 4) + " │");
 
             Console.SetCursorPosition(x, y + 3);
             Console.Write("│ " + $"Färg: {p.Färg}".PadRight(boxWidth - 4) + " │");
@@ -100,7 +109,7 @@ public class MainMenu : MenuBase
 
             Console.SetCursorPosition(x, y + 7);
 
-            string button = "[ Add to cart ]";
+            string button = "[ Lägg i kundvagn ]";
             int padding = (boxWidth - 2 - button.Length) / 2;
 
             string buttonLine = "│"
@@ -144,7 +153,7 @@ public class MainMenu : MenuBase
 
         Console.SetCursorPosition(10, Console.WindowHeight - 2);
         Console.ForegroundColor = Theme.Message;
-        Console.Write($"{selectedProduct.Namn} added to cart!");
+        Console.Write($"{selectedProduct.Namn} Lägg i kundvagn!");
         Console.ResetColor();
 
         Console.ReadKey();
@@ -155,13 +164,15 @@ public class MainMenu : MenuBase
         switch (selectedIndex)
         {
             case 0:
-                new CustomerMenu(_productService, _varukorgService, _kundService, _fraktOmbudRepository).ShowMenu("Kund Meny");
+                new CustomerMenu(_productService, _varukorgService).ShowMenu("Kund Meny");
                 return false;
 
             case 1:
                 var productHandler = new AdminProductHandler(_productService, _kategoriService, _leverantörService);
                 var categoryHandler = new AdminCategoryHandler(_kategoriService);
-                var adminMenu = new AdminMenu(productHandler, categoryHandler);
+                var customerHandler = new AdminCustomerHandler(_kundService);
+                var leverantörHandler = new AdminLeverantörHandler(_leverantörService);
+                var adminMenu = new AdminMenu(productHandler, categoryHandler, customerHandler, leverantörHandler);
                 adminMenu.ShowMenu("Admin Meny");
                 return false;
 

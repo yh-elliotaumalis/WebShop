@@ -5,7 +5,7 @@ using Webshop.Domain.Interfaces;
 
 namespace Webshop.Application.Services;
 
-public class OrderService(IOrderRepository orderRepository) : IOrderService
+public class OrderService(IOrderRepository orderRepository, IProduktRepository produktRepository) : IOrderService
 {
     public async Task<Order?> GetByIdAsync(Guid id)
         => await orderRepository.GetByIdAsync(id);
@@ -28,6 +28,15 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         };
 
         await orderRepository.AddAsync(order);
+        foreach (var rad in produkter)
+        {
+            var produkt = await produktRepository.GetByIdAsync(rad.ProduktId);
+            if (produkt != null)
+            {
+                produkt.LagerAntal -= rad.Antal;
+                await produktRepository.UpdateAsync(produkt);
+            }
+        }
         return order;
     }
 }

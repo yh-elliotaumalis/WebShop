@@ -1,6 +1,5 @@
 ﻿using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
-using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.Validator;
 
@@ -34,7 +33,8 @@ public class AdminCustomerHandler
             Console.ReadKey(true);
             return null;
         }
-        var selectedCustomer = MenuBase.NavigateList(customers.ToList(), (list, selectedIndex) => {
+        var selectedCustomer = MenuBase.NavigateList(customers.ToList(), (list, selectedIndex) =>
+        {
             Console.WriteLine("Kunder:");
             for (int i = 0; i < list.Count; i++)
             {
@@ -98,7 +98,8 @@ public class AdminCustomerHandler
                 });
                 Console.WriteLine();
             });
-        } else
+        }
+        else
         {
             Console.WriteLine("Denna kund har inga ordrar.");
         }
@@ -279,8 +280,15 @@ public class AdminCustomerHandler
         var key = Console.ReadKey(true);
         if (key.Key == ConsoleKey.Y)
         {
-            await _kundService.DeleteAsync(customer.Id);
-            Console.WriteLine("Kunden har tagits bort.");
+            try
+            {
+                await _kundService.DeleteAsync(customer.Id);
+                Console.WriteLine("Kunden har tagits bort.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Kunde inte ta bort kunden: {ex.Message}");
+            }
             Console.ReadKey(true);
         }
 

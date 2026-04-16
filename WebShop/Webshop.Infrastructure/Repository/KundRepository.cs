@@ -40,7 +40,11 @@ public class KundRepository(WebshopDbContext db) : IKundRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var kund = await db.Kunder.FindAsync(id);
+        var kund = await db.Kunder
+       .Include(k => k.Ordrar)
+           .ThenInclude(o => o.ProduktOrdrar)
+       .FirstOrDefaultAsync(k => k.Id == id);
+
         if (kund is null) return;
 
         db.Kunder.Remove(kund);

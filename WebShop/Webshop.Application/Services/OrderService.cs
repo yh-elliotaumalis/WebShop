@@ -28,6 +28,7 @@ public class OrderService(IOrderRepository orderRepository, IProduktRepository p
         };
 
         await orderRepository.AddAsync(order);
+
         foreach (var rad in produkter)
         {
             var produkt = await produktRepository.GetByIdAsync(rad.ProduktId);

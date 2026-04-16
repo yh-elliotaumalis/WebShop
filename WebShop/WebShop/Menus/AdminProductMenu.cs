@@ -1,6 +1,6 @@
 ﻿using WebShop.Presentation.MenuHandlers;
 
-namespace HustlersAB.Admin.Menus;
+namespace WebShop.Presentation.Menus;
 
 public class AdminProductMenu : MenuBase
 {

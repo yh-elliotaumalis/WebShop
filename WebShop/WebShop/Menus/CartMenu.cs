@@ -1,5 +1,4 @@
-﻿using HustlersAB.Admin.Menus;
-using Webshop.Application.Interfaces;
+﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using Webshop.Domain.Enums;
 using WebShop.Presentation.MenuHandlers;

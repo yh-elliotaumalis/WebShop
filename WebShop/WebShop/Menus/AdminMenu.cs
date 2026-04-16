@@ -1,7 +1,6 @@
 using WebShop.Presentation.MenuHandlers;
-using WebShop.Presentation.Menus;
 
-namespace HustlersAB.Admin.Menus;
+namespace WebShop.Presentation.Menus;
 
 public class AdminMenu : MenuBase
 {
@@ -69,7 +68,6 @@ public class AdminMenu : MenuBase
                 Console.Clear();
                 var statisticsMenu = new AdminStatisticsMenu(_productHandler, _categoryHandler);
                 statisticsMenu.ShowMenu("Se statistik");
-                return false;
                 return false;
 
             case 6:

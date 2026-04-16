@@ -1,8 +1,8 @@
-﻿using HustlersAB.Admin.Menus;
-using Webshop.Application.Interfaces;
+﻿using Webshop.Application.Interfaces;
 using Webshop.Application.Services;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
+using WebShop.Presentation.Menus;
 using WebShop.Presentation.UI;
 
 namespace Webshop.Presentation.Menus;

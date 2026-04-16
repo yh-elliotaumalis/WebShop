@@ -1,4 +1,4 @@
-﻿namespace HustlersAB.Admin.Menus;
+﻿namespace WebShop.Presentation.Menus;
 
 public abstract class MenuBase
 {

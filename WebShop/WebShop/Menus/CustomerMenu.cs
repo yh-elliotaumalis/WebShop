@@ -1,10 +1,9 @@
 ﻿using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
 using WebShop.Presentation.MenuHandlers;
-using WebShop.Presentation.Menus;
 using WebShop.Presentation.Validator;
 
-namespace HustlersAB.Admin.Menus;
+namespace WebShop.Presentation.Menus;
 
 public class CustomerMenu : MenuBase
 {

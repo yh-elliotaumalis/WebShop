@@ -1,5 +1,4 @@
-﻿using HustlersAB.Admin.Menus;
-using WebShop.Presentation.MenuHandlers;
+﻿using WebShop.Presentation.MenuHandlers;
 
 namespace WebShop.Presentation.Menus;
 

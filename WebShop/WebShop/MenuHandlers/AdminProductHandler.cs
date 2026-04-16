@@ -1,6 +1,6 @@
-using HustlersAB.Admin.Menus;
 using Webshop.Application.Interfaces;
 using Webshop.Domain.Entitites;
+using WebShop.Presentation.Menus;
 using WebShop.Presentation.Validator;
 
 namespace WebShop.Presentation.MenuHandlers;
